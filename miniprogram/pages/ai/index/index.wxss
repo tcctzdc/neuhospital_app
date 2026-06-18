@@ -1,0 +1,145 @@
+.ai-page {
+  padding-bottom: 32rpx;
+}
+
+.ai-hero {
+  position: relative;
+  background: linear-gradient(160deg, #1677ff 0%, #13c2c2 100%);
+  padding: 48rpx 48rpx 64rpx;
+  text-align: center;
+  overflow: hidden;
+}
+
+.ai-hero__glow {
+  position: absolute;
+  width: 300rpx;
+  height: 300rpx;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  top: -80rpx;
+  right: -60rpx;
+}
+
+.ai-hero__emoji {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.ai-hero__title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ai-hero__desc {
+  display: block;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 12rpx;
+  line-height: 1.6;
+}
+
+.ai-cards {
+  margin-top: -32rpx;
+}
+
+.ai-card {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.ai-card__icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.ai-card__body {
+  flex: 1;
+}
+
+.ai-card__title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.ai-card__desc {
+  display: block;
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  margin-top: 4rpx;
+}
+
+.ai-card__arrow {
+  font-size: 40rpx;
+  color: var(--color-text-placeholder);
+}
+
+.ai-session {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.ai-session:last-child {
+  border-bottom: none;
+}
+
+.ai-session__icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.ai-session__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ai-session__title {
+  display: block;
+  font-size: 28rpx;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-session__time {
+  display: block;
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+  margin-top: 4rpx;
+}
+
+.ai-tips {
+  padding: 28rpx 32rpx;
+  background: #fffbe6;
+  border: 1rpx solid #ffe58f;
+}
+
+.ai-tips__title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #d48806;
+  margin-bottom: 8rpx;
+}
+
+.ai-tips__text {
+  font-size: 24rpx;
+  color: #ad6800;
+  line-height: 1.6;
+}

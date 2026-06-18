@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "待缴费",
+  "usingComponents": {
+    "status-tag": "/components/status-tag/status-tag"
+  }
+}

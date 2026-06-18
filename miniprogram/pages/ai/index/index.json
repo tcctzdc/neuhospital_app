@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AI 问诊",
+  "navigationBarBackgroundColor": "#1677ff",
+  "usingComponents": {
+    "status-tag": "/components/status-tag/status-tag"
+  }
+}

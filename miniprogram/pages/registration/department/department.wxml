@@ -1,0 +1,33 @@
+<view class="page dept-page">
+  <view class="dept-search">
+    <input class="dept-search__input" placeholder="搜索科室" value="{{keyword}}" bindinput="onSearch" />
+  </view>
+  <view class="dept-body">
+    <scroll-view class="dept-sidebar" scroll-y>
+      <view
+        class="dept-sidebar__item {{activeIndex === index ? 'dept-sidebar__item--active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="name"
+        bindtap="onCategory"
+        data-index="{{index}}"
+      >{{item.name}}</view>
+    </scroll-view>
+    <scroll-view class="dept-list" scroll-y>
+      <view
+        class="dept-item"
+        wx:for="{{filteredDepts}}"
+        wx:key="id"
+        bindtap="selectDept"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+      >
+        <text class="dept-item__icon">{{item.icon}}</text>
+        <view class="dept-item__info">
+          <text class="dept-item__name">{{item.name}}</text>
+          <text class="dept-item__desc">{{item.desc}}</text>
+        </view>
+        <text class="dept-item__arrow">›</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

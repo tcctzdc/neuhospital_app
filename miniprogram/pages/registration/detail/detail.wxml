@@ -1,0 +1,18 @@
+<view class="page page-padding">
+  <view class="card detail-status">
+    <status-tag text="{{detail.statusText}}" type="{{detail.statusType}}" />
+    <text class="detail-status__tip">{{detail.statusTip}}</text>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx">
+    <view class="detail-row" wx:for="{{rows}}" wx:key="label">
+      <text class="detail-row__label">{{item.label}}</text>
+      <text class="detail-row__value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <view class="detail-actions safe-bottom" wx:if="{{detail.canCancel}}">
+    <button class="btn-outline" bindtap="onCancel">退号</button>
+    <button class="btn-primary" bindtap="goPay">去缴费</button>
+  </view>
+</view>

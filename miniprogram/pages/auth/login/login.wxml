@@ -1,0 +1,23 @@
+<view class="page login-page">
+  <view class="login-header">
+    <text class="login-header__logo">🏥</text>
+    <text class="login-header__title">智慧云脑诊疗</text>
+    <text class="login-header__desc">患者端登录</text>
+  </view>
+
+  <view class="login-form card">
+    <view class="login-field">
+      <text class="login-field__label">账号</text>
+      <input class="login-field__input" placeholder="请输入用户名" value="{{username}}" bindinput="onUsername" />
+    </view>
+    <view class="login-field">
+      <text class="login-field__label">密码</text>
+      <input class="login-field__input" password placeholder="请输入密码" value="{{password}}" bindinput="onPassword" />
+    </view>
+    <button class="btn-primary login-btn" loading="{{loading}}" bindtap="onLogin">登 录</button>
+    <view class="login-footer">
+      <text>还没有账号？</text>
+      <text class="login-footer__link" bindtap="goRegister">立即注册</text>
+    </view>
+  </view>
+</view>

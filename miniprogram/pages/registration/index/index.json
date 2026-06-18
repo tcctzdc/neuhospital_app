@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "预约挂号",
+  "usingComponents": {
+    "doctor-card": "/components/doctor-card/doctor-card"
+  }
+}

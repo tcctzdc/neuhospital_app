@@ -1,0 +1,62 @@
+<view class="page profile-page">
+  <!-- 用户头部 -->
+  <view class="profile-header">
+    <view class="profile-header__bg"></view>
+    <view class="profile-user" bindtap="onUserTap">
+      <view class="profile-user__avatar">
+        <text>{{avatarText}}</text>
+      </view>
+      <view class="profile-user__info">
+        <text class="profile-user__name">{{userName}}</text>
+        <text class="profile-user__phone">{{phone}}</text>
+      </view>
+      <text class="profile-user__arrow">›</text>
+    </view>
+
+    <!-- 就诊数据 -->
+    <view class="profile-stats card">
+      <view class="profile-stat" bindtap="goRegistrations">
+        <text class="profile-stat__num">{{stats.registrations}}</text>
+        <text class="profile-stat__label">挂号</text>
+      </view>
+      <view class="profile-stat__divider"></view>
+      <view class="profile-stat" bindtap="goRecords">
+        <text class="profile-stat__num">{{stats.records}}</text>
+        <text class="profile-stat__label">病历</text>
+      </view>
+      <view class="profile-stat__divider"></view>
+      <view class="profile-stat" bindtap="goPayments">
+        <text class="profile-stat__num">{{stats.payments}}</text>
+        <text class="profile-stat__label">待缴费</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="page-padding">
+    <!-- 健康档案 -->
+    <view class="card profile-section">
+      <view class="profile-section__title">健康档案</view>
+      <view class="profile-menu">
+        <view class="profile-menu__item" wx:for="{{healthMenus}}" wx:key="label" bindtap="goPage" data-url="{{item.url}}">
+          <text class="profile-menu__icon">{{item.icon}}</text>
+          <text class="profile-menu__label">{{item.label}}</text>
+          <text class="profile-menu__arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 设置 -->
+    <view class="card profile-section" style="margin-top: 24rpx">
+      <view class="profile-section__title">更多</view>
+      <view class="profile-menu">
+        <view class="profile-menu__item" wx:for="{{settingMenus}}" wx:key="label" bindtap="onMenuTap" data-action="{{item.action}}">
+          <text class="profile-menu__icon">{{item.icon}}</text>
+          <text class="profile-menu__label">{{item.label}}</text>
+          <text class="profile-menu__arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <button wx:if="{{isLoggedIn}}" class="btn-outline profile-logout" bindtap="logout">退出登录</button>
+  </view>
+</view>

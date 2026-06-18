@@ -1,0 +1,27 @@
+.register-page {
+  padding-top: 32rpx;
+}
+
+.register-field {
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.register-field__label {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: 12rpx;
+}
+
+.register-field__input,
+.register-field__picker {
+  height: 72rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+}
+
+.register-field__picker {
+  line-height: 72rpx;
+  color: var(--color-text-placeholder);
+}

@@ -1,0 +1,53 @@
+<view class="page page-padding confirm-page">
+  <view class="card confirm-doctor">
+    <view class="confirm-doctor__avatar">{{doctor.avatarText}}</view>
+    <view>
+      <text class="confirm-doctor__name">{{doctor.name}}</text>
+      <text class="confirm-doctor__title"> {{doctor.title}}</text>
+      <text class="confirm-doctor__dept">{{departmentName}}</text>
+    </view>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx">
+    <view class="confirm-row">
+      <text class="confirm-row__label">就诊日期</text>
+      <text class="confirm-row__value">{{date}}</text>
+    </view>
+    <view class="confirm-row">
+      <text class="confirm-row__label">选择时段</text>
+    </view>
+    <view class="confirm-slots">
+      <view
+        class="confirm-slot {{selectedSlot === item.value ? 'confirm-slot--active' : ''}} {{!item.available ? 'confirm-slot--disabled' : ''}}"
+        wx:for="{{slots}}"
+        wx:key="value"
+        bindtap="selectSlot"
+        data-value="{{item.value}}"
+        data-schedule-id="{{item.scheduleId}}"
+        data-available="{{item.available}}"
+      >
+        <text class="confirm-slot__label">{{item.label}}</text>
+        <text class="confirm-slot__remain">余{{item.remain}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx">
+    <view class="confirm-row">
+      <text class="confirm-row__label">挂号费用</text>
+      <text class="confirm-row__fee">¥{{doctor.fee}}</text>
+    </view>
+    <view class="confirm-row">
+      <text class="confirm-row__label">就诊人</text>
+      <text class="confirm-row__value">{{patientName}}</text>
+    </view>
+  </view>
+
+  <view class="confirm-footer safe-bottom">
+    <view class="confirm-footer__price">
+      <text class="confirm-footer__label">合计</text>
+      <text class="confirm-footer__amount">¥{{doctor.fee}}</text>
+    </view>
+    <button class="btn-primary confirm-footer__btn" loading="{{loading}}" bindtap="onSubmit">确认挂号</button>
+  </view>
+</view>

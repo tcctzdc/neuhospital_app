@@ -1,0 +1,75 @@
+.doctor-card {
+  display: flex;
+  padding: 28rpx 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.doctor-card__avatar {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1677ff, #13c2c2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+
+.doctor-card__avatar-text {
+  color: #fff;
+  font-size: 40rpx;
+  font-weight: 600;
+}
+
+.doctor-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.doctor-card__row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 8rpx;
+}
+
+.doctor-card__name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-right: 12rpx;
+}
+
+.doctor-card__title {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+.doctor-card__dept {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-primary);
+  margin-bottom: 8rpx;
+}
+
+.doctor-card__desc {
+  display: block;
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 12rpx;
+}
+
+.doctor-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.doctor-card__fee {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-danger);
+}

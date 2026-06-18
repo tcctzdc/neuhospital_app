@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "挂号详情",
+  "usingComponents": {
+    "status-tag": "/components/status-tag/status-tag"
+  }
+}

@@ -1,0 +1,29 @@
+<view class="page page-padding">
+  <view class="doctors-header">
+    <text class="doctors-header__dept">{{departmentName}}</text>
+    <picker mode="date" value="{{date}}" start="{{today}}" bindchange="onDateChange">
+      <view class="doctors-header__date">📅 {{date}} ▾</view>
+    </picker>
+  </view>
+
+  <doctor-card
+    wx:for="{{doctors}}"
+    wx:key="id"
+    id="{{item.id}}"
+    name="{{item.name}}"
+    title="{{item.title}}"
+    department="{{departmentName}}"
+    specialty="{{item.specialty}}"
+    status-text="{{item.statusText}}"
+    status-type="{{item.statusType}}"
+    fee="{{item.fee}}"
+    avatar-text="{{item.avatarText}}"
+    bind:tap="selectDoctor"
+    data-id="{{item.id}}"
+  />
+
+  <view wx:if="{{!doctors.length}}" class="empty-state card">
+    <text class="empty-state__icon">😔</text>
+    <text class="empty-state__text">该日期暂无号源</text>
+  </view>
+</view>

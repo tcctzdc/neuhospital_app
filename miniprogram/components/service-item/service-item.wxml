@@ -1,0 +1,7 @@
+<view class="service-item" bindtap="onTap">
+  <view class="service-item__icon" style="background: {{bgColor}}">
+    <text class="service-item__emoji">{{icon}}</text>
+  </view>
+  <text class="service-item__label">{{label}}</text>
+  <text wx:if="{{badge}}" class="service-item__badge">{{badge}}</text>
+</view>

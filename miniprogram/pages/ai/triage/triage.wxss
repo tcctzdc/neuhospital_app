@@ -1,0 +1,133 @@
+.triage-intro {
+  text-align: center;
+  padding: 40rpx 32rpx;
+}
+
+.triage-intro__icon {
+  font-size: 64rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.triage-intro__title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.triage-intro__desc {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  margin-top: 8rpx;
+}
+
+.triage-textarea {
+  width: 100%;
+  height: 240rpx;
+  padding: 28rpx 32rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.triage-count {
+  display: block;
+  text-align: right;
+  padding: 0 32rpx 16rpx;
+  font-size: 22rpx;
+  color: var(--color-text-placeholder);
+}
+
+.triage-tags {
+  margin-top: 24rpx;
+}
+
+.triage-tags__label {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+}
+
+.triage-tags__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.triage-tags__tag {
+  background: #fff;
+  border: 1rpx solid var(--color-border);
+  border-radius: 32rpx;
+  padding: 10rpx 24rpx;
+  font-size: 24rpx;
+  color: var(--color-text);
+}
+
+.triage-result {
+  margin-top: 32rpx;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #e6f4ff 0%, #e6fffb 100%);
+  border: 2rpx solid rgba(22, 119, 255, 0.15);
+}
+
+.triage-result__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.triage-result__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.triage-result__confidence {
+  font-size: 24rpx;
+  color: var(--color-primary);
+}
+
+.triage-result__dept {
+  background: #fff;
+  border-radius: var(--radius-md);
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.triage-result__dept-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.triage-result__dept-reason {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  margin-top: 8rpx;
+}
+
+.triage-result__action {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-primary);
+  margin-top: 12rpx;
+  font-weight: 500;
+}
+
+.triage-result__advice-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 8rpx;
+}
+
+.triage-result__advice-text {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}

@@ -1,0 +1,17 @@
+<view class="doctor-card card" bindtap="onTap">
+  <view class="doctor-card__avatar">
+    <text class="doctor-card__avatar-text">{{avatarText}}</text>
+  </view>
+  <view class="doctor-card__info">
+    <view class="doctor-card__row">
+      <text class="doctor-card__name">{{name}}</text>
+      <text class="doctor-card__title">{{title}}</text>
+    </view>
+    <text class="doctor-card__dept">{{department}}</text>
+    <text class="doctor-card__desc">{{specialty}}</text>
+    <view class="doctor-card__footer">
+      <status-tag text="{{statusText}}" type="{{statusType}}" />
+      <text wx:if="{{fee}}" class="doctor-card__fee">¥{{fee}}</text>
+    </view>
+  </view>
+</view>

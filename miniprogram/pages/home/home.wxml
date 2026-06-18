@@ -1,0 +1,105 @@
+<view class="home">
+  <!-- 顶部渐变区：仅标题 -->
+  <view class="home-header">
+    <text class="home-header__title">智慧云脑诊疗</text>
+    <text class="home-header__subtitle">AI 赋能 · 智慧就医</text>
+  </view>
+
+  <view class="home-body">
+    <!-- 搜索框：独立于轮播，避免重叠 -->
+    <view class="home-search" bindtap="goSearch">
+      <text class="home-search__icon">🔍</text>
+      <text class="home-search__text">搜索科室、医生</text>
+    </view>
+
+    <!-- 轮播公告 -->
+    <swiper class="home-banner" autoplay circular indicator-dots indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#fff">
+      <swiper-item wx:for="{{banners}}" wx:key="id">
+        <view class="home-banner__item home-banner__item--{{index}}">
+          <text class="home-banner__tag">{{item.tag}}</text>
+          <text class="home-banner__title">{{item.title}}</text>
+          <text class="home-banner__desc">{{item.desc}}</text>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <!-- 快捷服务：4 列 x 2 行 -->
+    <view class="card home-services">
+      <view class="home-services__title">
+        <text class="home-services__title-text">快捷服务</text>
+      </view>
+      <view class="home-services__grid">
+        <view
+          class="home-service-item"
+          wx:for="{{services}}"
+          wx:key="label"
+          bindtap="goService"
+          data-url="{{item.url}}"
+        >
+          <view class="home-service-item__icon" style="background: {{item.bgColor}}">
+            <text class="home-service-item__emoji">{{item.icon}}</text>
+            <text wx:if="{{item.badge}}" class="home-service-item__badge">{{item.badge}}</text>
+          </view>
+          <text class="home-service-item__label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- AI 导诊入口 -->
+    <view class="home-ai card" bindtap="goTriage">
+      <view class="home-ai__left">
+        <view class="home-ai__badge">AI</view>
+        <view>
+          <text class="home-ai__title">智能导诊</text>
+          <text class="home-ai__desc">描述症状，AI 推荐合适科室</text>
+        </view>
+      </view>
+      <text class="home-ai__arrow">›</text>
+    </view>
+
+    <!-- 热门科室 -->
+    <view class="home-section">
+      <view class="section-title">
+        <text class="section-title__text">热门科室</text>
+        <text class="section-title__more" bindtap="goDepartments">全部 ›</text>
+      </view>
+      <scroll-view class="home-depts" scroll-x enable-flex>
+        <view
+          class="home-dept"
+          wx:for="{{departments}}"
+          wx:key="id"
+          bindtap="goDepartment"
+          data-id="{{item.id}}"
+        >
+          <view class="home-dept__icon" style="background: {{item.bgColor}}">{{item.icon}}</view>
+          <text class="home-dept__name">{{item.name}}</text>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 待办提醒 -->
+    <view class="home-section" wx:if="{{todos.length}}">
+      <view class="section-title">
+        <text class="section-title__text">待办提醒</text>
+      </view>
+      <view class="card">
+        <view
+          class="home-todo"
+          wx:for="{{todos}}"
+          wx:key="id"
+          bindtap="goTodo"
+          data-url="{{item.url}}"
+        >
+          <view class="home-todo__dot home-todo__dot--{{item.type}}"></view>
+          <view class="home-todo__content">
+            <text class="home-todo__title">{{item.title}}</text>
+            <text class="home-todo__desc">{{item.desc}}</text>
+          </view>
+          <text class="home-todo__arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="home-bottom-space"></view>
+  </view>
+</view>

@@ -1,0 +1,67 @@
+.pay-detail-header {
+  text-align: center;
+  padding: 48rpx 32rpx;
+}
+
+.pay-detail-header__amount {
+  display: block;
+  font-size: 56rpx;
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.pay-detail-header__status {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-warning);
+  margin-top: 8rpx;
+}
+
+.pay-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.pay-detail-row--total {
+  border-bottom: none;
+  border-top: 1rpx solid var(--color-border);
+}
+
+.pay-detail-row__name {
+  font-size: 28rpx;
+  color: var(--color-text);
+}
+
+.pay-detail-row__price {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}
+
+.pay-detail-row__price--total {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.pay-detail-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.pay-detail-info:last-child {
+  border-bottom: none;
+}
+
+.pay-detail-info__label {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}
+
+.pay-detail-info__value {
+  font-size: 28rpx;
+  color: var(--color-text);
+}

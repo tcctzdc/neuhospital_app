@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "就诊记录",
+  "usingComponents": {
+    "status-tag": "/components/status-tag/status-tag"
+  }
+}

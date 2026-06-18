@@ -1,0 +1,44 @@
+.detail-status {
+  text-align: center;
+  padding: 48rpx 32rpx;
+}
+
+.detail-status__tip {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  margin-top: 16rpx;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row__label {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}
+
+.detail-row__value {
+  font-size: 28rpx;
+  color: var(--color-text);
+  text-align: right;
+  max-width: 60%;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 48rpx;
+}
+
+.detail-actions button {
+  flex: 1;
+}

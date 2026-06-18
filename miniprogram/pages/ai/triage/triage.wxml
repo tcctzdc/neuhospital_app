@@ -1,0 +1,44 @@
+<view class="page page-padding triage-page">
+  <view class="triage-intro card">
+    <text class="triage-intro__icon">🧭</text>
+    <text class="triage-intro__title">描述您的症状</text>
+    <text class="triage-intro__desc">AI 将根据症状为您推荐合适的就诊科室</text>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx">
+    <textarea
+      class="triage-textarea"
+      placeholder="例如：头痛三天，伴有恶心，偶尔视物模糊..."
+      maxlength="500"
+      value="{{symptoms}}"
+      bindinput="onInput"
+    />
+    <text class="triage-count">{{symptoms.length}}/500</text>
+  </view>
+
+  <view class="triage-tags">
+    <text class="triage-tags__label">常见症状：</text>
+    <view class="triage-tags__list">
+      <text class="triage-tags__tag" wx:for="{{symptomTags}}" wx:key="*this" bindtap="addTag" data-tag="{{item}}">{{item}}</text>
+    </view>
+  </view>
+
+  <button class="btn-primary" style="width:100%;margin-top:32rpx" loading="{{loading}}" bindtap="onSubmit">开始导诊</button>
+
+  <!-- 导诊结果 -->
+  <view wx:if="{{result}}" class="triage-result card">
+    <view class="triage-result__header">
+      <text class="triage-result__title">🎯 推荐科室</text>
+      <text class="triage-result__confidence">置信度 {{result.confidence}}%</text>
+    </view>
+    <view class="triage-result__dept" bindtap="goDept">
+      <text class="triage-result__dept-name">{{result.department}}</text>
+      <text class="triage-result__dept-reason">{{result.reason}}</text>
+      <text class="triage-result__action">立即挂号 ›</text>
+    </view>
+    <view class="triage-result__advice">
+      <text class="triage-result__advice-title">就医建议</text>
+      <text class="triage-result__advice-text">{{result.advice}}</text>
+    </view>
+  </view>
+</view>

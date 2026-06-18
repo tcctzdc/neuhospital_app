@@ -1,0 +1,27 @@
+/* 智慧云脑诊疗 - 设计令牌 */
+page {
+  --color-primary: #1677ff;
+  --color-primary-light: #e6f4ff;
+  --color-primary-dark: #0958d9;
+  --color-accent: #13c2c2;
+  --color-accent-light: #e6fffb;
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-danger: #ff4d4f;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-placeholder: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-bg: #f3f6fb;
+  --color-card: #ffffff;
+  --radius-sm: 12rpx;
+  --radius-md: 20rpx;
+  --radius-lg: 28rpx;
+  --shadow-card: 0 8rpx 32rpx rgba(22, 119, 255, 0.08);
+  --shadow-sm: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 28rpx;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}

@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/registration/index/index",
+    "pages/ai/index/index",
+    "pages/profile/index/index",
+    "pages/auth/login/login",
+    "pages/auth/register/register",
+    "pages/registration/department/department",
+    "pages/registration/doctors/doctors",
+    "pages/registration/confirm/confirm",
+    "pages/registration/my-list/my-list",
+    "pages/registration/detail/detail",
+    "pages/ai/chat/chat",
+    "pages/ai/triage/triage",
+    "pages/records/index/index",
+    "pages/records/medical/medical",
+    "pages/payment/list/list",
+    "pages/payment/detail/detail"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "智慧云脑诊疗",
+    "navigationBarBackgroundColor": "#1677ff",
+    "backgroundColor": "#f3f6fb"
+  },
+  "tabBar": {
+    "color": "#9ca3af",
+    "selectedColor": "#1677ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/registration/index/index",
+        "text": "挂号",
+        "iconPath": "assets/icons/register.png",
+        "selectedIconPath": "assets/icons/register-active.png"
+      },
+      {
+        "pagePath": "pages/ai/index/index",
+        "text": "AI问诊",
+        "iconPath": "assets/icons/ai.png",
+        "selectedIconPath": "assets/icons/ai-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index/index",
+        "text": "我的",
+        "iconPath": "assets/icons/profile.png",
+        "selectedIconPath": "assets/icons/profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents"
+}

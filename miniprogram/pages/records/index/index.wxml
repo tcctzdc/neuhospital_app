@@ -1,0 +1,38 @@
+<view class="page page-padding">
+  <view class="tabs">
+    <view
+      class="tabs__item {{activeTab === item.key ? 'tabs__item--active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="key"
+      bindtap="onTab"
+      data-key="{{item.key}}"
+    >{{item.label}}</view>
+  </view>
+
+  <view
+    class="card record-item"
+    wx:for="{{list}}"
+    wx:key="id"
+    bindtap="goDetail"
+    data-id="{{item.id}}"
+    data-type="{{activeTab}}"
+  >
+    <view class="record-item__header">
+      <text class="record-item__title">{{item.title}}</text>
+      <status-tag text="{{item.statusText}}" type="{{item.statusType}}" />
+    </view>
+    <text class="record-item__dept">{{item.subtitle}}</text>
+    <text class="record-item__time">{{item.time}}</text>
+  </view>
+
+  <view wx:if="{{!isLoggedIn}}" class="empty-state card">
+    <text class="empty-state__icon">🔐</text>
+    <text class="empty-state__text">登录后查看就诊记录</text>
+    <button class="btn-primary" style="margin-top:32rpx" bindtap="goLogin">去登录</button>
+  </view>
+
+  <view wx:elif="{{!list.length}}" class="empty-state card">
+    <text class="empty-state__icon">📄</text>
+    <text class="empty-state__text">暂无记录</text>
+  </view>
+</view>

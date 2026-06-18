@@ -1,0 +1,30 @@
+<view class="page chat-page">
+  <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollTo}}" scroll-with-animation>
+    <view class="chat-msg chat-msg--{{item.role}}" wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}">
+      <view class="chat-msg__avatar">{{item.role === 'user' ? '我' : 'AI'}}</view>
+      <view class="chat-msg__bubble">
+        <text class="chat-msg__text">{{item.content}}</text>
+        <text class="chat-msg__time">{{item.time}}</text>
+      </view>
+    </view>
+    <view wx:if="{{typing}}" class="chat-msg chat-msg--assistant">
+      <view class="chat-msg__avatar">AI</view>
+      <view class="chat-msg__bubble chat-msg__bubble--typing">
+        <text>正在思考</text>
+        <text class="chat-typing">...</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="chat-quick" wx:if="{{!messages.length}}">
+    <text class="chat-quick__title">您可以这样问：</text>
+    <view class="chat-quick__tags">
+      <text class="chat-quick__tag" wx:for="{{quickQuestions}}" wx:key="*this" bindtap="sendQuick" data-text="{{item}}">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="chat-input safe-bottom">
+    <input class="chat-input__field" placeholder="描述您的症状..." value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
+    <button class="chat-input__btn" bindtap="onSend" disabled="{{!input}}">发送</button>
+  </view>
+</view>

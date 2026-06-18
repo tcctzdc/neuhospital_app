@@ -1,0 +1,20 @@
+.doctors-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.doctors-header__dept {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.doctors-header__date {
+  font-size: 26rpx;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 8rpx 20rpx;
+  border-radius: 24rpx;
+}

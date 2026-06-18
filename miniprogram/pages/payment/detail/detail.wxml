@@ -1,0 +1,26 @@
+<view class="page page-padding">
+  <view class="card pay-detail-header">
+    <text class="pay-detail-header__amount">¥{{amount}}</text>
+    <text class="pay-detail-header__status">{{statusText}}</text>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx">
+    <view class="pay-detail-row" wx:for="{{items}}" wx:key="name">
+      <text class="pay-detail-row__name">{{item.name}}</text>
+      <text class="pay-detail-row__price">¥{{item.price}}</text>
+    </view>
+    <view class="pay-detail-row pay-detail-row--total">
+      <text class="pay-detail-row__name">合计</text>
+      <text class="pay-detail-row__price pay-detail-row__price--total">¥{{amount}}</text>
+    </view>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx">
+    <view class="pay-detail-info" wx:for="{{info}}" wx:key="label">
+      <text class="pay-detail-info__label">{{item.label}}</text>
+      <text class="pay-detail-info__value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <button class="btn-primary safe-bottom" style="width:100%;margin-top:48rpx" bindtap="onPay">微信支付</button>
+</view>

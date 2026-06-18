@@ -1,0 +1,32 @@
+.status-tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.status-tag--primary {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.status-tag--success {
+  background: #f6ffed;
+  color: var(--color-success);
+}
+
+.status-tag--warning {
+  background: #fffbe6;
+  color: var(--color-warning);
+}
+
+.status-tag--danger {
+  background: #fff2f0;
+  color: var(--color-danger);
+}
+
+.status-tag--default {
+  background: #f3f4f6;
+  color: var(--color-text-secondary);
+}

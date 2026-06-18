@@ -1,0 +1,44 @@
+<view class="page page-padding">
+  <view class="tabs">
+    <view
+      class="tabs__item {{activeTab === item.key ? 'tabs__item--active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="key"
+      bindtap="onTab"
+      data-key="{{item.key}}"
+    >{{item.label}}</view>
+  </view>
+
+  <view
+    class="card reg-item"
+    wx:for="{{list}}"
+    wx:key="id"
+    bindtap="goDetail"
+    data-id="{{item.id}}"
+  >
+    <view class="reg-item__header">
+      <text class="reg-item__no">{{item.registrationNo}}</text>
+      <status-tag text="{{item.statusText}}" type="{{item.statusType}}" />
+    </view>
+    <view class="reg-item__body">
+      <text class="reg-item__dept">{{item.department}} · {{item.doctorName}}</text>
+      <text class="reg-item__time">📅 {{item.visitDate}} {{item.timeSlotText}}</text>
+      <text class="reg-item__queue" wx:if="{{item.queueNo}}">排队号：{{item.queueNo}}</text>
+    </view>
+    <view class="reg-item__footer" wx:if="{{item.canCancel}}">
+      <button class="btn-outline reg-item__btn" catchtap="onCancel" data-id="{{item.id}}">退号</button>
+    </view>
+  </view>
+
+  <view wx:if="{{!isLoggedIn}}" class="empty-state card">
+    <text class="empty-state__icon">🔐</text>
+    <text class="empty-state__text">登录后查看挂号记录</text>
+    <button class="btn-primary" style="margin-top:32rpx" bindtap="goLogin">去登录</button>
+  </view>
+
+  <view wx:elif="{{!list.length}}" class="empty-state card">
+    <text class="empty-state__icon">📋</text>
+    <text class="empty-state__text">暂无挂号记录</text>
+    <button class="btn-primary" style="margin-top:32rpx" bindtap="goRegister">去挂号</button>
+  </view>
+</view>

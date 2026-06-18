@@ -1,0 +1,20 @@
+<view class="page page-padding register-page">
+  <view class="card">
+    <view class="register-field" wx:for="{{fields}}" wx:key="key">
+      <text class="register-field__label">{{item.label}}</text>
+      <picker wx:if="{{item.type === 'gender'}}" mode="selector" range="{{genderOptions}}" bindchange="onGender">
+        <view class="register-field__picker">{{form.gender || '请选择性别'}}</view>
+      </picker>
+      <input
+        wx:else
+        class="register-field__input"
+        placeholder="{{item.placeholder}}"
+        type="{{item.inputType || 'text'}}"
+        password="{{item.password}}"
+        data-key="{{item.key}}"
+        bindinput="onInput"
+      />
+    </view>
+    <button class="btn-primary" style="width:100%;margin-top:16rpx" loading="{{loading}}" bindtap="onRegister">注 册</button>
+  </view>
+</view>

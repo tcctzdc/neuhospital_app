@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "选择医生",
+  "usingComponents": {
+    "doctor-card": "/components/doctor-card/doctor-card"
+  }
+}

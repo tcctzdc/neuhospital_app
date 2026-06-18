@@ -1,0 +1,68 @@
+<view class="page ai-page">
+  <view class="ai-hero">
+    <view class="ai-hero__glow"></view>
+    <text class="ai-hero__emoji">🤖</text>
+    <text class="ai-hero__title">智慧云脑 AI 助手</text>
+    <text class="ai-hero__desc">基于 Spring AI 的智能诊疗辅助，为您提供专业健康咨询</text>
+  </view>
+
+  <view class="page-padding">
+    <view class="ai-cards">
+      <view class="ai-card card" bindtap="goChat">
+        <view class="ai-card__icon" style="background: #e6f4ff">💬</view>
+        <view class="ai-card__body">
+          <text class="ai-card__title">AI 智能问诊</text>
+          <text class="ai-card__desc">描述症状，获取初步健康建议</text>
+        </view>
+        <text class="ai-card__arrow">›</text>
+      </view>
+
+      <view class="ai-card card" bindtap="goTriage">
+        <view class="ai-card__icon" style="background: #e6fffb">🧭</view>
+        <view class="ai-card__body">
+          <text class="ai-card__title">AI 智能导诊</text>
+          <text class="ai-card__desc">根据症状推荐合适科室与医生</text>
+        </view>
+        <text class="ai-card__arrow">›</text>
+      </view>
+    </view>
+
+    <view class="section-title" style="margin-top: 32rpx">
+      <text class="section-title__text">历史会话</text>
+    </view>
+
+    <view wx:if="{{sessions.length}}" class="card">
+      <view
+        class="ai-session"
+        wx:for="{{sessions}}"
+        wx:key="id"
+        bindtap="openSession"
+        data-id="{{item.id}}"
+      >
+        <view class="ai-session__icon">💬</view>
+        <view class="ai-session__info">
+          <text class="ai-session__title">{{item.title}}</text>
+          <text class="ai-session__time">{{item.time}}</text>
+        </view>
+        <status-tag text="{{item.status}}" type="{{item.statusType}}" />
+      </view>
+    </view>
+
+    <view wx:elif="{{!isLoggedIn}}" class="empty-state card">
+      <text class="empty-state__icon">🔐</text>
+      <text class="empty-state__text">登录后可使用 AI 问诊并查看历史会话</text>
+      <button class="btn-primary" style="margin-top: 32rpx" bindtap="goLogin">去登录</button>
+    </view>
+
+    <view wx:else class="empty-state card">
+      <text class="empty-state__icon">💬</text>
+      <text class="empty-state__text">暂无历史会话，开始一次 AI 问诊吧</text>
+      <button class="btn-primary" style="margin-top: 32rpx" bindtap="goChat">开始问诊</button>
+    </view>
+
+    <view class="ai-tips card" style="margin-top: 24rpx">
+      <text class="ai-tips__title">⚠️ 温馨提示</text>
+      <text class="ai-tips__text">AI 建议仅供参考，不能替代医生诊断。如有紧急情况请立即就医或拨打 120。</text>
+    </view>
+  </view>
+</view>

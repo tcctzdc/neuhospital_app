@@ -1,0 +1,39 @@
+<view class="page page-padding payment-page">
+  <view wx:if="{{!isLoggedIn}}" class="empty-state card">
+    <text class="empty-state__icon">🔐</text>
+    <text class="empty-state__text">登录后查看待缴费项目</text>
+    <button class="btn-primary" style="margin-top:32rpx" bindtap="goLogin">去登录</button>
+  </view>
+
+  <block wx:else>
+  <view class="payment-summary card">
+    <text class="payment-summary__label">待缴总额</text>
+    <text class="payment-summary__amount">¥{{totalAmount}}</text>
+    <text class="payment-summary__count">共 {{orders.length}} 笔待缴</text>
+  </view>
+
+  <view
+    class="card payment-order"
+    wx:for="{{orders}}"
+    wx:key="id"
+    bindtap="goDetail"
+    data-id="{{item.id}}"
+  >
+    <view class="payment-order__header">
+      <text class="payment-order__type">{{item.type}}</text>
+      <status-tag text="待缴费" type="warning" />
+    </view>
+    <view class="payment-order__items">
+      <text class="payment-order__item" wx:for="{{item.items}}" wx:for-item="sub" wx:key="*this">· {{sub}}</text>
+    </view>
+    <view class="payment-order__footer">
+      <text class="payment-order__time">{{item.time}}</text>
+      <text class="payment-order__amount">¥{{item.amount}}</text>
+    </view>
+  </view>
+
+  <view class="payment-footer safe-bottom" wx:if="{{orders.length}}">
+    <button class="btn-primary" style="width:100%" bindtap="payAll">一键缴费 ¥{{totalAmount}}</button>
+  </view>
+  </block>
+</view>

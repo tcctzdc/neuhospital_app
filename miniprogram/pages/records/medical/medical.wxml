@@ -1,0 +1,19 @@
+<view class="page page-padding">
+  <view class="card medical-header">
+    <text class="medical-header__title">门诊病历</text>
+    <text class="medical-header__meta">{{meta}}</text>
+  </view>
+
+  <view class="card medical-section" wx:for="{{sections}}" wx:key="label" style="margin-top: 20rpx">
+    <text class="medical-section__label">{{item.label}}</text>
+    <text class="medical-section__content">{{item.content}}</text>
+  </view>
+
+  <view class="card medical-section" style="margin-top: 20rpx">
+    <text class="medical-section__label">初步诊断</text>
+    <view class="medical-diagnosis" wx:for="{{diagnoses}}" wx:key="name">
+      <text class="medical-diagnosis__name">{{item.name}}</text>
+      <text class="medical-diagnosis__code">{{item.code}}</text>
+    </view>
+  </view>
+</view>

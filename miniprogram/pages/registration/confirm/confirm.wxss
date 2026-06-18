@@ -1,0 +1,141 @@
+.confirm-page {
+  padding-bottom: 160rpx;
+}
+
+.confirm-doctor {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+}
+
+.confirm-doctor__avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1677ff, #13c2c2);
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.confirm-doctor__name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.confirm-doctor__title {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+.confirm-doctor__dept {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-primary);
+  margin-top: 8rpx;
+}
+
+.confirm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--color-border);
+}
+
+.confirm-row:last-child {
+  border-bottom: none;
+}
+
+.confirm-row__label {
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+}
+
+.confirm-row__value {
+  font-size: 28rpx;
+  color: var(--color-text);
+}
+
+.confirm-row__fee {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.confirm-slots {
+  display: flex;
+  gap: 20rpx;
+  padding: 16rpx 32rpx 32rpx;
+}
+
+.confirm-slot {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  border: 2rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.confirm-slot--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.confirm-slot--disabled {
+  opacity: 0.4;
+}
+
+.confirm-slot__label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.confirm-slot__remain {
+  display: block;
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+  margin-top: 4rpx;
+}
+
+.confirm-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 20rpx 32rpx;
+  background: #fff;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.confirm-footer__price {
+  flex: 1;
+}
+
+.confirm-footer__label {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  margin-right: 8rpx;
+}
+
+.confirm-footer__amount {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.confirm-footer__btn {
+  width: 280rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 28rpx;
+}
