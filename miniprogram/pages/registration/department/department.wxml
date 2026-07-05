@@ -1,4 +1,12 @@
-<view class="page dept-page">
+<view class="page dept-page page-shell">
+  <view wx:if="{{loading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading}}">
   <view class="dept-search">
     <input class="dept-search__input" placeholder="搜索科室" value="{{keyword}}" bindinput="onSearch" />
   </view>
@@ -29,5 +37,6 @@
         <text class="dept-item__arrow">›</text>
       </view>
     </scroll-view>
+  </view>
   </view>
 </view>

@@ -1,9 +1,35 @@
-<view class="page page-padding">
+<view class="page page-padding page-shell">
+  <view wx:if="{{loading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading}}">
   <view class="doctors-header">
     <text class="doctors-header__dept">{{departmentName}}</text>
-    <picker mode="date" value="{{date}}" start="{{today}}" bindchange="onDateChange">
-      <view class="doctors-header__date">📅 {{date}} ▾</view>
-    </picker>
+  </view>
+
+  <view class="date-strip-block">
+    <view class="date-strip-tip">
+      <text class="date-strip-tip__icon">📅</text>
+      <text class="date-strip-tip__text">仅开放未来 {{advanceDays}} 天挂号，请点击下方日期切换</text>
+    </view>
+    <scroll-view scroll-x class="date-strip" enhanced show-scrollbar="{{false}}">
+      <view class="date-strip__inner">
+        <view
+          wx:for="{{dateOptions}}"
+          wx:key="value"
+          class="date-chip {{date === item.value ? 'date-chip--active' : ''}}"
+          bindtap="onSelectDate"
+          data-date="{{item.value}}"
+        >
+          <text class="date-chip__week">{{item.weekdayText}}</text>
+          <text class="date-chip__day">{{item.dateText}}</text>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
   <doctor-card
@@ -24,6 +50,7 @@
 
   <view wx:if="{{!doctors.length}}" class="empty-state card">
     <text class="empty-state__icon">😔</text>
-    <text class="empty-state__text">该日期暂无号源</text>
+    <text class="empty-state__text">该日期暂无号源，请试试其他日期</text>
+  </view>
   </view>
 </view>

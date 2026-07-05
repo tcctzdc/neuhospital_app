@@ -89,6 +89,7 @@
   width: 1rpx;
   height: 60rpx;
   background: var(--color-border);
+  flex-shrink: 0;
 }
 
 .profile-section__title {

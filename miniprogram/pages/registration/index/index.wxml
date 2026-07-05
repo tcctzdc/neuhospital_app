@@ -1,4 +1,12 @@
-<view class="page page-padding">
+<view class="page page-padding page-shell">
+  <view wx:if="{{loading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading}}">
   <!-- 步骤引导 -->
   <view class="reg-steps card">
     <view class="reg-step" wx:for="{{steps}}" wx:key="title">
@@ -49,4 +57,10 @@
     bind:tap="goDoctor"
     data-id="{{item.id}}"
   />
+
+  <view wx:if="{{!todayDoctors.length}}" class="empty-state card">
+    <text class="empty-state__icon">😔</text>
+    <text class="empty-state__text">今日暂无可约医生</text>
+  </view>
+  </view>
 </view>

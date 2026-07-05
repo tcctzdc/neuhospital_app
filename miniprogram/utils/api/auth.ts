@@ -35,7 +35,7 @@ export async function login(payload: LoginPayload): Promise<LoginResult> {
     url: '/auth/login',
     method: 'POST',
     data: payload as unknown as Record<string, unknown>,
-    needAuth: false,
+    skipToken: true,
   })
 }
 
@@ -44,12 +44,12 @@ export async function register(payload: RegisterPayload): Promise<void> {
     url: '/auth/register',
     method: 'POST',
     data: payload as unknown as Record<string, unknown>,
-    needAuth: false,
+    skipToken: true,
   })
 }
 
-export async function fetchMe(): Promise<UserMeDto> {
-  return request<UserMeDto>({ url: '/auth/me', method: 'GET' })
+export async function fetchMe(options?: { silent?: boolean }): Promise<UserMeDto> {
+  return request<UserMeDto>({ url: '/auth/me', method: 'GET', silent: options?.silent })
 }
 
 export async function logout(): Promise<void> {
@@ -61,6 +61,6 @@ export async function refreshToken(refreshToken: string): Promise<LoginResult> {
     url: '/auth/refresh',
     method: 'POST',
     data: { refreshToken },
-    needAuth: false,
+    skipToken: true,
   })
 }

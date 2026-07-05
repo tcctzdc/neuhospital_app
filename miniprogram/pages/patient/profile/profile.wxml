@@ -1,0 +1,53 @@
+<view class="page page-padding profile-edit page-shell">
+  <view wx:if="{{loading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view wx:elif="{{loadError}}" class="empty-state card">
+    <text class="empty-state__icon">⚠️</text>
+    <text class="empty-state__text">档案加载失败，请检查登录状态后重试</text>
+    <button class="btn-primary" style="margin-top:32rpx" bindtap="loadProfile">重新加载</button>
+  </view>
+
+  <view hidden="{{loading || loadError}}">
+    <view class="card profile-edit__form">
+      <view class="form-row">
+        <text class="form-row__label">姓名</text>
+        <input class="form-row__input" value="{{form.name}}" data-field="name" bindinput="onInput" placeholder="请输入姓名" />
+      </view>
+      <view class="form-row">
+        <text class="form-row__label">手机</text>
+        <input class="form-row__input" value="{{form.phone}}" data-field="phone" bindinput="onInput" placeholder="请输入手机号" />
+      </view>
+      <view class="form-row">
+        <text class="form-row__label">性别</text>
+        <picker mode="selector" range="{{genderOptions}}" value="{{genderIndex}}" bindchange="onGenderChange">
+          <view class="form-row__picker">{{form.gender || '请选择'}}</view>
+        </picker>
+      </view>
+      <view class="form-row">
+        <text class="form-row__label">出生日期</text>
+        <picker mode="date" value="{{form.birthDate}}" bindchange="onDateChange">
+          <view class="form-row__picker">{{form.birthDate || '请选择'}}</view>
+        </picker>
+      </view>
+      <view class="form-row">
+        <text class="form-row__label">血型</text>
+        <input class="form-row__input" value="{{form.bloodType}}" data-field="bloodType" bindinput="onInput" placeholder="如 A 型" />
+      </view>
+      <view class="form-row form-row--textarea">
+        <text class="form-row__label">过敏史</text>
+        <textarea class="form-row__textarea" value="{{form.allergySummary}}" data-field="allergySummary" bindinput="onInput" placeholder="填写过敏史摘要" />
+      </view>
+      <view class="form-row form-row--textarea">
+        <text class="form-row__label">既往史</text>
+        <textarea class="form-row__textarea" value="{{form.historySummary}}" data-field="historySummary" bindinput="onInput" placeholder="填写既往病史摘要" />
+      </view>
+    </view>
+
+    <button class="btn-primary safe-bottom" style="margin-top:32rpx" loading="{{saving}}" bindtap="onSave">保存</button>
+  </view>
+</view>

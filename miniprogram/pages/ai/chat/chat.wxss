@@ -73,17 +73,27 @@
 }
 
 .chat-msg__bubble--typing {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
   color: var(--color-text-secondary);
   font-size: 26rpx;
 }
 
-.chat-typing {
-  animation: blink 1.2s infinite;
+.chat-typing-spinner {
+  width: 28rpx;
+  height: 28rpx;
+  border: 4rpx solid #e8eef5;
+  border-top-color: #1677ff;
+  border-radius: 50%;
+  animation: chat-spin 0.75s linear infinite;
+  flex-shrink: 0;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
+@keyframes chat-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .chat-quick {

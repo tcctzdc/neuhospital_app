@@ -10,11 +10,3 @@
   font-weight: 600;
   color: var(--color-text);
 }
-
-.doctors-header__date {
-  font-size: 26rpx;
-  color: var(--color-primary);
-  background: var(--color-primary-light);
-  padding: 8rpx 20rpx;
-  border-radius: 24rpx;
-}

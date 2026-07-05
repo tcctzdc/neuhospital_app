@@ -1,5 +1,6 @@
-import { fetchDepartments } from '../../utils/api/department'
-import { deptIcon } from '../../utils/format'
+import { fetchDepartments } from '../../../utils/api/department'
+import { deptIcon } from '../../../utils/format'
+import { checkLogin } from '../../../utils/patient'
 
 interface DeptItem {
   id: number
@@ -23,6 +24,7 @@ Page({
   },
 
   onLoad() {
+    if (!checkLogin({ navigate: true })) return
     this.loadDepartments()
   },
 

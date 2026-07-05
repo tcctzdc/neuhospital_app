@@ -2,7 +2,6 @@
   "pages": [
     "pages/home/home",
     "pages/registration/index/index",
-    "pages/ai/index/index",
     "pages/profile/index/index",
     "pages/auth/login/login",
     "pages/auth/register/register",
@@ -12,11 +11,11 @@
     "pages/registration/my-list/my-list",
     "pages/registration/detail/detail",
     "pages/ai/chat/chat",
-    "pages/ai/triage/triage",
     "pages/records/index/index",
     "pages/records/medical/medical",
     "pages/payment/list/list",
-    "pages/payment/detail/detail"
+    "pages/payment/detail/detail",
+    "pages/patient/profile/profile"
   ],
   "window": {
     "navigationBarTextStyle": "white",
@@ -41,12 +40,6 @@
         "text": "挂号",
         "iconPath": "assets/icons/register.png",
         "selectedIconPath": "assets/icons/register-active.png"
-      },
-      {
-        "pagePath": "pages/ai/index/index",
-        "text": "AI问诊",
-        "iconPath": "assets/icons/ai.png",
-        "selectedIconPath": "assets/icons/ai-active.png"
       },
       {
         "pagePath": "pages/profile/index/index",

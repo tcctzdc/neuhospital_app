@@ -1,4 +1,12 @@
-<view class="page page-padding">
+<view class="page page-padding page-shell">
+  <view wx:if="{{loading && isLoggedIn}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading && isLoggedIn}}">
   <view class="tabs">
     <view
       class="tabs__item {{activeTab === item.key ? 'tabs__item--active' : ''}}"
@@ -33,6 +41,7 @@
 
   <view wx:elif="{{!list.length}}" class="empty-state card">
     <text class="empty-state__icon">📄</text>
-    <text class="empty-state__text">暂无记录</text>
+    <text class="empty-state__text">{{emptyHint || '暂无记录'}}</text>
+  </view>
   </view>
 </view>

@@ -1,4 +1,12 @@
-<view class="page page-padding">
+<view class="page page-padding page-shell">
+  <view wx:if="{{loading && isLoggedIn}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading && isLoggedIn}}">
   <view class="tabs">
     <view
       class="tabs__item {{activeTab === item.key ? 'tabs__item--active' : ''}}"
@@ -40,5 +48,6 @@
     <text class="empty-state__icon">📋</text>
     <text class="empty-state__text">暂无挂号记录</text>
     <button class="btn-primary" style="margin-top:32rpx" bindtap="goRegister">去挂号</button>
+  </view>
   </view>
 </view>

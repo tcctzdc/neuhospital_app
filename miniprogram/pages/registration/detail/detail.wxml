@@ -1,4 +1,12 @@
-<view class="page page-padding">
+<view class="page page-padding page-shell">
+  <view wx:if="{{loading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading}}">
   <view class="card detail-status">
     <status-tag text="{{detail.statusText}}" type="{{detail.statusType}}" />
     <text class="detail-status__tip">{{detail.statusTip}}</text>
@@ -11,8 +19,10 @@
     </view>
   </view>
 
-  <view class="detail-actions safe-bottom" wx:if="{{detail.canCancel}}">
-    <button class="btn-outline" bindtap="onCancel">退号</button>
-    <button class="btn-primary" bindtap="goPay">去缴费</button>
+  <view class="detail-actions safe-bottom" wx:if="{{detail.canCheckIn || detail.canCancel}}">
+    <button wx:if="{{detail.canCancel}}" class="btn-outline" bindtap="onCancel">退号</button>
+    <button wx:if="{{detail.canCheckIn}}" class="btn-primary" bindtap="onCheckIn">到院签到</button>
+    <button wx:if="{{detail.canCancel}}" class="btn-outline" bindtap="goPay">去缴费</button>
+  </view>
   </view>
 </view>

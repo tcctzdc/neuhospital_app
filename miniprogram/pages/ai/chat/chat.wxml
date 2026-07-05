@@ -10,8 +10,8 @@
     <view wx:if="{{typing}}" class="chat-msg chat-msg--assistant">
       <view class="chat-msg__avatar">AI</view>
       <view class="chat-msg__bubble chat-msg__bubble--typing">
+        <view class="chat-typing-spinner"></view>
         <text>正在思考</text>
-        <text class="chat-typing">...</text>
       </view>
     </view>
   </scroll-view>
@@ -25,6 +25,6 @@
 
   <view class="chat-input safe-bottom">
     <input class="chat-input__field" placeholder="描述您的症状..." value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
-    <button class="chat-input__btn" bindtap="onSend" disabled="{{!input}}">发送</button>
+    <button class="chat-input__btn" bindtap="onSend" loading="{{sending}}" disabled="{{!input || sending}}">发送</button>
   </view>
 </view>

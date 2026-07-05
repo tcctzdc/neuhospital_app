@@ -1,14 +1,14 @@
-import { isLoggedIn, getUserInfo } from '../../../utils/request'
-import { fetchMe, logout as apiLogout } from '../../../utils/api/auth'
+import { isLoggedIn, clearAuth } from '../../../utils/request'
+import { logout as apiLogout } from '../../../utils/api/auth'
 import { fetchMyRegistrations } from '../../../utils/api/registration'
 import { fetchPendingPayments } from '../../../utils/api/payment'
 import { fetchPatientRecords } from '../../../utils/api/record'
-import { fetchPatientProfile } from '../../../utils/api/record'
-import { getPatientId } from '../../../utils/patient'
+import { checkLogin, fetchPatientDisplayInfo } from '../../../utils/patient'
 
 Page({
   data: {
     isLoggedIn: false,
+    loading: false,
     userName: '点击登录',
     phone: '登录后查看就诊信息',
     avatarText: '?',
@@ -18,8 +18,8 @@ Page({
       { icon: '📄', label: '电子病历', url: '/pages/records/index/index' },
       { icon: '💊', label: '我的处方', url: '/pages/records/index/index?tab=prescription' },
       { icon: '🔬', label: '检查检验', url: '/pages/records/index/index?tab=inspection' },
-      { icon: '🧠', label: 'CT 影像分析', url: '/pages/records/index/index?tab=ct' },
-      { icon: '💰', label: '缴费记录', url: '/pages/payment/list/list' },
+      { icon: '💰', label: '在线缴费', url: '/pages/payment/list/list' },
+      { icon: '💬', label: 'AI 问诊', url: '/pages/ai/chat/chat', needLogin: true },
     ],
     settingMenus: [
       { icon: '👤', label: '个人信息', action: 'profile' },
@@ -32,22 +32,27 @@ Page({
     this.loadUserInfo()
   },
 
+  setGuestView() {
+    this.setData({
+      isLoggedIn: false,
+      userName: '点击登录',
+      phone: '登录后查看就诊信息',
+      avatarText: '?',
+      stats: { registrations: 0, records: 0, payments: 0 },
+    })
+  },
+
   async loadUserInfo() {
     if (!isLoggedIn()) {
-      this.setData({
-        isLoggedIn: false,
-        userName: '点击登录',
-        phone: '登录后查看就诊信息',
-        avatarText: '?',
-        stats: { registrations: 0, records: 0, payments: 0 },
-      })
+      clearAuth()
+      this.setGuestView()
       return
     }
+    this.setData({ loading: true })
     try {
-      const me = await fetchMe()
-      const app = getApp<IAppOption>()
-      app.setUserInfo(me as unknown as Record<string, unknown>)
-      const patientId = me.bizId || 0
+      const info = await fetchPatientDisplayInfo({ silent: true })
+      if (!info) throw new Error('未登录')
+      const patientId = info.patientId
       const [regs, payments, records] = await Promise.all([
         fetchMyRegistrations().catch(() => []),
         fetchPendingPayments().catch(() => []),
@@ -55,9 +60,9 @@ Page({
       ])
       this.setData({
         isLoggedIn: true,
-        userName: me.realName || me.username,
-        phone: me.phone || '未绑定手机',
-        avatarText: (me.realName || me.username || '?').charAt(0),
+        userName: info.displayName || '未设置姓名',
+        phone: info.phone || '未绑定手机',
+        avatarText: (info.displayName || '?').charAt(0),
         stats: {
           registrations: regs.length,
           records: records.length,
@@ -65,25 +70,28 @@ Page({
         },
       })
     } catch {
-      const user = getUserInfo() as Record<string, string> | null
-      this.setData({
-        isLoggedIn: true,
-        userName: user?.realName || user?.username || '用户',
-        phone: user?.phone || '',
-        avatarText: (user?.realName || '?').charAt(0),
-        stats: { registrations: 0, records: 0, payments: 0 },
-      })
+      // token 失效或后端不可用：清除本地登录态，不再用旧缓存冒充已登录
+      clearAuth()
+      this.setGuestView()
+    } finally {
+      this.setData({ loading: false })
     }
   },
 
   onUserTap() {
     if (!this.data.isLoggedIn) {
       wx.navigateTo({ url: '/pages/auth/login/login' })
+      return
     }
+    if (!checkLogin({ navigate: true })) return
+    wx.navigateTo({ url: '/pages/patient/profile/profile' })
   },
 
   goPage(e: WechatMiniprogram.TouchEvent) {
-    wx.navigateTo({ url: e.currentTarget.dataset.url as string })
+    const url = e.currentTarget.dataset.url as string
+    const needLogin = e.currentTarget.dataset.login
+    if (needLogin && !checkLogin({ navigate: true })) return
+    wx.navigateTo({ url })
   },
 
   goRegistrations() {
@@ -98,35 +106,21 @@ Page({
     wx.navigateTo({ url: '/pages/payment/list/list' })
   },
 
-  async onMenuTap(e: WechatMiniprogram.TouchEvent) {
+  onMenuTap(e: WechatMiniprogram.TouchEvent) {
     const action = e.currentTarget.dataset.action
     if (action === 'profile') {
-      if (!this.data.isLoggedIn) {
-        wx.navigateTo({ url: '/pages/auth/login/login' })
-        return
-      }
-      try {
-        const patientId = await getPatientId()
-        const profile = await fetchPatientProfile(patientId)
-        const name = profile.name || profile.realName || this.data.userName
-        wx.showModal({
-          title: '个人信息',
-          content: `姓名：${name}\n手机：${profile.phone || this.data.phone}\n患者ID：${patientId}`,
-          showCancel: false,
-        })
-      } catch {
-        wx.showToast({ title: '获取信息失败', icon: 'none' })
-      }
+      if (!checkLogin({ navigate: true })) return
+      wx.navigateTo({ url: '/pages/patient/profile/profile' })
       return
     }
     if (action === 'service') {
-      wx.makePhoneCall({ phoneNumber: '4000000000' }).catch(() => {})
+      wx.makePhoneCall({ phoneNumber: '1589921770' }).catch(() => {})
       return
     }
     if (action === 'about') {
       wx.showModal({
         title: '智慧云脑诊疗',
-        content: '东软教育实训 · 患者端小程序\n基于 Spring Boot + Spring AI 后端',
+        content: '东软教育实训 · 患者端小程序\n注册 / 登录 / 挂号 / 缴费 / 病历 / AI 问诊',
         showCancel: false,
       })
     }
@@ -143,8 +137,8 @@ Page({
         } catch {
           // 仍清除本地
         }
-        getApp<IAppOption>().clearUserInfo()
-        this.loadUserInfo()
+        clearAuth()
+        this.setGuestView()
         wx.showToast({ title: '已退出', icon: 'success' })
       },
     })

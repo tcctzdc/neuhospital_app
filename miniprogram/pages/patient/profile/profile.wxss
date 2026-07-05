@@ -1,0 +1,49 @@
+.profile-edit__form {
+  padding: 8rpx 0;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.form-row:last-child {
+  border-bottom: none;
+}
+
+.form-row--textarea {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-row__label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.form-row__input,
+.form-row__picker {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+}
+
+.form-row--textarea .form-row__label {
+  margin-bottom: 16rpx;
+}
+
+.form-row__textarea {
+  width: 100%;
+  min-height: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: #f9fafb;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  box-sizing: border-box;
+}

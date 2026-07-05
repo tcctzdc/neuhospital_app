@@ -1,4 +1,12 @@
-<view class="page page-padding confirm-page">
+<view class="page page-padding confirm-page page-shell">
+  <view wx:if="{{pageLoading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{pageLoading}}">
   <view class="card confirm-doctor">
     <view class="confirm-doctor__avatar">{{doctor.avatarText}}</view>
     <view>
@@ -9,9 +17,25 @@
   </view>
 
   <view class="card" style="margin-top: 24rpx">
-    <view class="confirm-row">
-      <text class="confirm-row__label">就诊日期</text>
-      <text class="confirm-row__value">{{date}}</text>
+    <view class="date-strip-block date-strip-block--in-card">
+      <view class="date-strip-tip">
+        <text class="date-strip-tip__icon">📅</text>
+        <text class="date-strip-tip__text">仅开放未来 {{advanceDays}} 天挂号，请点击选择就诊日期</text>
+      </view>
+      <scroll-view scroll-x class="date-strip" enhanced show-scrollbar="{{false}}">
+        <view class="date-strip__inner">
+          <view
+            wx:for="{{dateOptions}}"
+            wx:key="value"
+            class="date-chip {{date === item.value ? 'date-chip--active' : ''}}"
+            bindtap="onSelectDate"
+            data-date="{{item.value}}"
+          >
+            <text class="date-chip__week">{{item.weekdayText}}</text>
+            <text class="date-chip__day">{{item.dateText}}</text>
+          </view>
+        </view>
+      </scroll-view>
     </view>
     <view class="confirm-row">
       <text class="confirm-row__label">选择时段</text>
@@ -49,5 +73,6 @@
       <text class="confirm-footer__amount">¥{{doctor.fee}}</text>
     </view>
     <button class="btn-primary confirm-footer__btn" loading="{{loading}}" bindtap="onSubmit">确认挂号</button>
+  </view>
   </view>
 </view>

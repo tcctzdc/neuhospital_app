@@ -31,7 +31,12 @@
       <text class="section-title__text">历史会话</text>
     </view>
 
-    <view wx:if="{{sessions.length}}" class="card">
+    <view wx:if="{{loading}}" class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+
+    <view wx:elif="{{sessions.length}}" class="card">
       <view
         class="ai-session"
         wx:for="{{sessions}}"

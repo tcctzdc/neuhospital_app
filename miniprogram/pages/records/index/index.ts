@@ -1,11 +1,10 @@
 import {
   fetchPatientRecords,
   fetchPrescriptions,
-  fetchCheckResults,
-  fetchInspectionResults,
-  fetchCtAnalysisTasks,
+  fetchCheckRequests,
+  fetchInspectionRequests,
 } from '../../../utils/api/record'
-import { getPatientId, checkLogin } from '../../../utils/patient'
+import { getPatientId } from '../../../utils/patient'
 import { isLoggedIn } from '../../../utils/request'
 
 interface RecordItem {
@@ -22,11 +21,11 @@ Page({
     loading: true,
     isLoggedIn: false,
     activeTab: 'medical',
+    emptyHint: '',
     tabs: [
       { key: 'medical', label: '病历' },
       { key: 'prescription', label: '处方' },
       { key: 'inspection', label: '检查检验' },
-      { key: 'ct', label: 'CT 分析' },
     ],
     list: [] as RecordItem[],
   },
@@ -41,20 +40,24 @@ Page({
     if (loggedIn) {
       this.loadTab()
     } else {
-      this.setData({ list: [], loading: false })
+      this.setData({ list: [], loading: false, emptyHint: '' })
     }
   },
 
   onTab(e: WechatMiniprogram.TouchEvent) {
-    this.setData({ activeTab: e.currentTarget.dataset.key })
+    this.setData({ activeTab: e.currentTarget.dataset.key, emptyHint: '' })
     this.loadTab()
   },
 
   async loadTab() {
     const { activeTab } = this.data
-    this.setData({ loading: true })
+    this.setData({ loading: true, emptyHint: '' })
     try {
       const patientId = await getPatientId()
+      if (!patientId) {
+        this.setData({ list: [] })
+        return
+      }
       let list: RecordItem[] = []
       if (activeTab === 'medical') {
         const rows = await fetchPatientRecords(patientId)
@@ -78,41 +81,35 @@ Page({
         }))
       } else if (activeTab === 'inspection') {
         const [checks, inspections] = await Promise.all([
-          fetchCheckResults(patientId),
-          fetchInspectionResults(patientId),
+          fetchCheckRequests(patientId),
+          fetchInspectionRequests(patientId),
         ])
         list = [
           ...checks.map((r) => ({
             id: r.id,
-            title: r.checkName || r.name || '检查',
+            title: r.checkName || r.checkItemName || r.name || `检查 #${r.requestNo || r.id}`,
             subtitle: r.departmentName || '检查科',
             time: String(r.createdAt || '').slice(0, 10),
-            statusText: '已出报告',
-            statusType: 'success',
+            statusText: r.status || '申请单',
+            statusType: 'primary',
           })),
           ...inspections.map((r) => ({
             id: r.id,
-            title: r.inspectionName || r.name || '检验',
+            title: r.inspectionName || r.inspectionItemName || r.name || `检验 #${r.requestNo || r.id}`,
             subtitle: r.departmentName || '检验科',
             time: String(r.createdAt || '').slice(0, 10),
-            statusText: '已出报告',
-            statusType: 'success',
+            statusText: r.status || '申请单',
+            statusType: 'primary',
           })),
         ]
-      } else if (activeTab === 'ct') {
-        const rows = await fetchCtAnalysisTasks(patientId)
-        list = rows.map((r) => ({
-          id: Number(r.id || r.taskId),
-          title: r.analysisType || 'CT AI 分析',
-          subtitle: '影像 AI',
-          time: String(r.createdAt || '').slice(0, 10),
-          statusText: r.riskLevel || r.status || '分析中',
-          statusType: r.riskLevel === 'HIGH' ? 'danger' : 'primary',
-        }))
       }
       this.setData({ list })
-    } catch {
-      this.setData({ list: [] })
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : ''
+      const hint = msg.includes('403') || msg.includes('Access Denied') || msg.includes('权限')
+        ? '后端暂未开放患者读取权限，请稍后重试'
+        : ''
+      this.setData({ list: [], emptyHint: hint })
     } finally {
       this.setData({ loading: false })
     }
@@ -123,11 +120,11 @@ Page({
   },
 
   goDetail(e: WechatMiniprogram.TouchEvent) {
-    const { id, type } = e.currentTarget.dataset
+    const { id } = e.currentTarget.dataset
     if (this.data.activeTab === 'medical') {
       wx.navigateTo({ url: `/pages/records/medical/medical?id=${id}` })
     } else {
-      wx.showToast({ title: '请在医院系统查看详情', icon: 'none' })
+      wx.showToast({ title: '请在列表中查看摘要', icon: 'none' })
     }
   },
 })

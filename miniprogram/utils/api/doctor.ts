@@ -19,35 +19,56 @@ export interface ScheduleDto {
   scheduleDate?: string
   timeSlot?: string
   remainQuota?: number
+  availableCount?: number
   totalQuota?: number
   feeAmount?: number
   status?: string
 }
 
-export async function fetchDoctors(departmentId?: number): Promise<DoctorDto[]> {
+function normalizeSchedule(raw: ScheduleDto): ScheduleDto {
+  const remain = raw.remainQuota ?? raw.availableCount
+  return {
+    ...raw,
+    remainQuota: remain ?? 0,
+  }
+}
+
+export async function fetchDoctors(params?: {
+  departmentId?: number
+  keyword?: string
+  pageNo?: number
+  pageSize?: number
+}): Promise<DoctorDto[]> {
   const data = await request<DoctorDto[] | { records: DoctorDto[] }>({
-    url: '/doctors',
+    url: '/doctors/page',
     method: 'GET',
-    data: departmentId ? { departmentId } : undefined,
-    needAuth: false,
+    data: params as Record<string, unknown>,
   })
   return unwrapList(data)
 }
 
 export async function fetchDoctor(id: number): Promise<DoctorDto> {
-  return request<DoctorDto>({ url: `/doctors/${id}`, method: 'GET', needAuth: false })
+  return request<DoctorDto>({ url: `/doctors/${id}`, method: 'GET' })
 }
 
+/** 患者端查排班：默认 bookableOnly=true，仅返回 7 天窗口内可预约排班 */
 export async function fetchSchedules(params: {
   departmentId?: number
   doctorId?: number
   scheduleDate?: string
+  bookableOnly?: boolean
+  pageNo?: number
+  pageSize?: number
 }): Promise<ScheduleDto[]> {
   const data = await request<ScheduleDto[] | { records: ScheduleDto[] }>({
     url: '/schedules',
     method: 'GET',
-    data: params as Record<string, unknown>,
-    needAuth: false,
+    data: {
+      pageNo: 1,
+      pageSize: 50,
+      bookableOnly: true,
+      ...params,
+    } as Record<string, unknown>,
   })
-  return unwrapList(data)
+  return unwrapList(data).map(normalizeSchedule)
 }

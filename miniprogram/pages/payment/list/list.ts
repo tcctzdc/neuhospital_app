@@ -1,11 +1,12 @@
-import { fetchPendingPayments, payOrder } from '../../../utils/api/payment'
+import { fetchPendingPayments, createPaymentOrder, payOrder, toPaymentCreateItems } from '../../../utils/api/payment'
 import { isLoggedIn } from '../../../utils/request'
 import { checkLogin } from '../../../utils/patient'
 
-interface OrderView {
-  id: number
-  type: string
-  items: string[]
+interface PendingView {
+  itemType: string
+  bizId: number
+  bizType: string
+  name: string
   time: string
   amount: string
 }
@@ -13,41 +14,43 @@ interface OrderView {
 Page({
   data: {
     loading: true,
+    paying: false,
     isLoggedIn: false,
     totalAmount: '0.00',
-    orders: [] as OrderView[],
+    orders: [] as PendingView[],
+    rawItems: [] as ReturnType<typeof toPaymentCreateItems>,
   },
 
   onShow() {
     const loggedIn = isLoggedIn()
     this.setData({ isLoggedIn: loggedIn })
     if (loggedIn) {
-      this.loadOrders()
+      this.loadPending()
     } else {
-      this.setData({ orders: [], totalAmount: '0.00', loading: false })
+      this.setData({ orders: [], rawItems: [], totalAmount: '0.00', loading: false })
     }
   },
 
-  async loadOrders() {
+  async loadPending() {
     this.setData({ loading: true })
     try {
       const rows = await fetchPendingPayments()
-      const orders: OrderView[] = rows.map((o) => {
-        const items = (o.items || o.paymentItems || []).map(
-          (i) => i.itemName || i.name || '费用项',
-        )
-        return {
-          id: o.id,
-          type: o.orderType || o.type || '待缴费',
-          items: items.length ? items : ['医疗费用'],
-          time: String(o.createdAt || o.createTime || '').slice(0, 10),
-          amount: Number(o.totalAmount ?? o.amount ?? 0).toFixed(2),
-        }
+      const orders: PendingView[] = rows.map((o) => ({
+        itemType: String(o.itemType || o.bizType || 'REGISTRATION').toUpperCase(),
+        bizId: Number(o.bizId ?? o.id ?? 0),
+        bizType: o.itemType || o.bizType || '待缴费',
+        name: o.itemName || o.name || '医疗费用',
+        time: String(o.createdAt || '').slice(0, 10),
+        amount: Number(o.amount ?? o.totalAmount ?? 0).toFixed(2),
+      }))
+      const total = rows.reduce((s, o) => s + Number(o.amount ?? o.totalAmount ?? 0), 0)
+      this.setData({
+        orders,
+        rawItems: toPaymentCreateItems(rows),
+        totalAmount: total.toFixed(2),
       })
-      const total = rows.reduce((s, o) => s + Number(o.totalAmount ?? o.amount ?? 0), 0)
-      this.setData({ orders, totalAmount: total.toFixed(2) })
     } catch {
-      this.setData({ orders: [], totalAmount: '0.00' })
+      this.setData({ orders: [], rawItems: [], totalAmount: '0.00' })
     } finally {
       this.setData({ loading: false })
     }
@@ -57,27 +60,26 @@ Page({
     wx.navigateTo({ url: '/pages/auth/login/login' })
   },
 
-  goDetail(e: WechatMiniprogram.TouchEvent) {
-    wx.navigateTo({ url: `/pages/payment/detail/detail?id=${e.currentTarget.dataset.id}` })
-  },
-
   async payAll() {
     if (!checkLogin({ navigate: true })) return
-    const { orders } = this.data
-    if (!orders.length) return
+    const { rawItems, paying } = this.data
+    if (!rawItems.length || paying) return
     wx.showModal({
       title: '确认支付',
-      content: `将依次支付 ${orders.length} 笔待缴订单`,
+      content: `将支付 ${rawItems.length} 项待缴费用，合计 ¥${this.data.totalAmount}`,
       success: async (res) => {
         if (!res.confirm) return
+        this.setData({ paying: true })
         try {
-          for (const o of orders) {
-            await payOrder(o.id, Number(o.amount))
-          }
+          const order = await createPaymentOrder(rawItems)
+          const amount = Number(order.totalAmount ?? order.amount ?? this.data.totalAmount)
+          await payOrder(order.id, amount)
           wx.showToast({ title: '支付成功', icon: 'success' })
-          this.loadOrders()
+          this.loadPending()
         } catch {
           // request 内已 toast
+        } finally {
+          this.setData({ paying: false })
         }
       },
     })

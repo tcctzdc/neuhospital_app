@@ -1,53 +1,67 @@
 import { request } from '../request'
 import { unwrapList } from '../format'
 
-export interface PaymentItemDto {
+export interface PendingPaymentItem {
+  id?: number
+  itemType?: string
+  bizType?: string
+  bizId?: number
   itemName?: string
   name?: string
   amount?: number
-  price?: number
+  totalAmount?: number
+  createdAt?: string
 }
 
 export interface PaymentOrderDto {
   id: number
   orderNo?: string
-  orderType?: string
-  type?: string
   status?: string
   totalAmount?: number
   amount?: number
-  paidAmount?: number
+  items?: Array<{ itemName?: string; name?: string; amount?: number }>
   createdAt?: string
-  createTime?: string
-  items?: PaymentItemDto[]
-  paymentItems?: PaymentItemDto[]
 }
 
-export async function fetchPendingPayments(): Promise<PaymentOrderDto[]> {
-  const data = await request<PaymentOrderDto[] | { records: PaymentOrderDto[] }>({
-    url: '/payment-orders/pending',
+export interface PaymentCreateItem {
+  itemType: string
+  bizId: number
+}
+
+/** 查询待缴费项目（patientId 由 Token 解析，无需传参） */
+export async function fetchPendingPayments(): Promise<PendingPaymentItem[]> {
+  const data = await request<PendingPaymentItem[] | { records: PendingPaymentItem[] } | PendingPaymentItem>({
+    url: '/payment/pending',
     method: 'GET',
   })
-  return unwrapList(data)
+  if (Array.isArray(data)) return data
+  return unwrapList(data as { records: PendingPaymentItem[] })
 }
 
-export async function fetchPaymentOrder(id: number): Promise<PaymentOrderDto> {
-  return request<PaymentOrderDto>({ url: `/payment-orders/${id}`, method: 'GET' })
-}
-
-export async function payOrder(id: number, paidAmount: number): Promise<PaymentOrderDto> {
+/** 创建支付订单 POST /api/payment/create */
+export async function createPaymentOrder(items: PaymentCreateItem[]): Promise<PaymentOrderDto> {
   return request<PaymentOrderDto>({
-    url: `/payment-orders/${id}/pay`,
+    url: '/payment/create',
     method: 'POST',
-    data: { payChannel: 'WECHAT', paidAmount },
+    data: { items } as Record<string, unknown>,
   })
 }
 
-export async function fetchPaymentOrders(pageNo = 1, pageSize = 20): Promise<PaymentOrderDto[]> {
-  const data = await request<PaymentOrderDto[] | { records: PaymentOrderDto[] }>({
-    url: '/payment-orders',
-    method: 'GET',
-    data: { pageNo, pageSize },
+/** 模拟支付 POST /api/payment/{id}/pay */
+export async function payOrder(id: number, paidAmount?: number): Promise<PaymentOrderDto> {
+  return request<PaymentOrderDto>({
+    url: `/payment/${id}/pay`,
+    method: 'POST',
+    data: paidAmount ? { payChannel: 'WECHAT', paidAmount } : { payChannel: 'WECHAT' },
   })
-  return unwrapList(data)
+}
+
+/** 将待缴项转为 create 请求体 */
+export function toPaymentCreateItems(rows: PendingPaymentItem[]): PaymentCreateItem[] {
+  return rows
+    .map((o) => ({
+      itemType: String(o.itemType || o.bizType || 'REGISTRATION').toUpperCase(),
+      bizId: Number(o.bizId ?? o.id ?? 0),
+    }))
+    .filter((o) => o.bizId > 0)
 }

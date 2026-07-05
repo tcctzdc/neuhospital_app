@@ -62,7 +62,12 @@
   border-radius: 48rpx;
   font-size: 28rpx;
   height: 72rpx;
-  line-height: 72rpx;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .btn-outline::after {
@@ -87,6 +92,164 @@
   font-size: 28rpx;
 }
 
+.page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+}
+
+.page-loading--full {
+  min-height: 60vh;
+}
+
+.page-loading--compact {
+  padding: 24rpx 0;
+  flex-direction: row;
+  gap: 16rpx;
+}
+
+.page-loading--compact .page-loading__ring {
+  width: 36rpx;
+  height: 36rpx;
+  border-width: 4rpx;
+  margin-bottom: 0;
+}
+
+.page-loading--compact .page-loading__text {
+  margin-top: 0;
+  font-size: 26rpx;
+}
+
+.page-loading__ring {
+  width: 64rpx;
+  height: 64rpx;
+  border: 6rpx solid #e8eef5;
+  border-top-color: #1677ff;
+  border-radius: 50%;
+  animation: page-loading-spin 0.75s linear infinite;
+}
+
+.page-loading__text {
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #9ca3af;
+}
+
+.page-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.page-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f6fb;
+}
+
+@keyframes page-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .safe-bottom {
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+/* 可预约日期条（7 天） */
+.date-strip-block {
+  margin-bottom: 24rpx;
+}
+
+.date-strip-block--in-card {
+  padding: 24rpx 0 8rpx;
+}
+
+.date-strip-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 16rpx;
+  background: #fffbe6;
+  border: 1rpx solid #ffe58f;
+  border-radius: var(--radius-md);
+}
+
+.date-strip-block--in-card .date-strip-tip {
+  margin: 0 32rpx 16rpx;
+}
+
+.date-strip-tip__icon {
+  font-size: 28rpx;
+  line-height: 1.4;
+}
+
+.date-strip-tip__text {
+  flex: 1;
+  font-size: 24rpx;
+  line-height: 1.5;
+  color: #ad6800;
+}
+
+.date-strip {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.date-strip-block--in-card .date-strip {
+  padding: 0 32rpx;
+}
+
+.date-strip__inner {
+  display: inline-flex;
+  gap: 16rpx;
+  padding: 4rpx 0 8rpx;
+}
+
+.date-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 112rpx;
+  padding: 16rpx 12rpx;
+  border: 2rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+
+.date-chip--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.date-chip__week {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+.date-chip--active .date-chip__week {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.date-chip__day {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 4rpx;
+}
+
+.date-chip--active .date-chip__day {
+  color: var(--color-primary);
 }

@@ -1,4 +1,6 @@
 import { loadDoctorCards } from '../../../utils/api/registration-ui'
+import { BOOKABLE_ADVANCE_DAYS } from '../../../utils/config'
+import { BookableDateOption, buildBookableDateOptions, pickBookableDate } from '../../../utils/format'
 
 Page({
   data: {
@@ -6,18 +8,19 @@ Page({
     departmentId: 0,
     departmentName: '',
     date: '',
-    today: '',
+    advanceDays: BOOKABLE_ADVANCE_DAYS,
+    dateOptions: [] as BookableDateOption[],
     doctors: [] as Awaited<ReturnType<typeof loadDoctorCards>>,
   },
 
   onLoad(options: Record<string, string>) {
-    const d = new Date()
-    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    const dateOptions = buildBookableDateOptions(BOOKABLE_ADVANCE_DAYS)
+    const date = pickBookableDate(options.date, BOOKABLE_ADVANCE_DAYS)
     this.setData({
       departmentId: Number(options.departmentId) || 0,
       departmentName: decodeURIComponent(options.departmentName || ''),
-      date: today,
-      today,
+      date,
+      dateOptions,
     })
     this.loadDoctors()
   },
@@ -35,8 +38,10 @@ Page({
     }
   },
 
-  onDateChange(e: WechatMiniprogram.PickerChange) {
-    this.setData({ date: e.detail.value as string })
+  onSelectDate(e: WechatMiniprogram.TouchEvent) {
+    const date = e.currentTarget.dataset.date as string
+    if (!date || date === this.data.date) return
+    this.setData({ date })
     this.loadDoctors()
   },
 

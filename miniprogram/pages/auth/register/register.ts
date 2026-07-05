@@ -24,7 +24,9 @@ Page({
 
   onInput(e: WechatMiniprogram.Input) {
     const key = e.currentTarget.dataset.key as string
-    this.setData({ [`form.${key}`]: e.detail.value })
+    const form = Object.assign({}, this.data.form) as Record<string, string>
+    form[key] = e.detail.value
+    this.setData({ form: form as typeof this.data.form })
   },
 
   onGender(e: WechatMiniprogram.PickerChange) {

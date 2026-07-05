@@ -1,12 +1,50 @@
 import { fetchMe } from './api/auth'
+import { fetchPatient } from './api/patient'
 import { getUserInfo, isLoggedIn } from './request'
 
-export async function getPatientId(): Promise<number> {
+export interface PatientDisplayInfo {
+  patientId: number
+  displayName: string
+  phone: string
+}
+
+/** 就诊展示用：优先患者档案姓名/手机，账号信息作兜底 */
+export async function fetchPatientDisplayInfo(options?: {
+  silent?: boolean
+}): Promise<PatientDisplayInfo | null> {
+  if (!isLoggedIn()) return null
+  const me = await fetchMe({ silent: options?.silent })
+  const app = getApp<IAppOption>()
+  app.setUserInfo(me as unknown as Record<string, unknown>)
+
+  const patientId = Number(me.bizId) || 0
+  let displayName = me.realName || me.username || ''
+  let phone = me.phone || ''
+
+  if (patientId) {
+    try {
+      const profile = await fetchPatient(patientId)
+      displayName = profile.name || profile.realName || displayName
+      phone = profile.phone || phone
+    } catch {
+      // 患者档案不可用时沿用账号信息
+    }
+  }
+
+  return { patientId, displayName, phone }
+}
+
+export async function getPatientId(options?: { refresh?: boolean }): Promise<number> {
+  if (options?.refresh || !getUserInfo()?.bizId) {
+    if (!isLoggedIn()) return 0
+    const me = await fetchMe()
+    const app = getApp<IAppOption>()
+    app.setUserInfo(me as unknown as Record<string, unknown>)
+    return Number(me.bizId) || 0
+  }
   const cached = getUserInfo()
   if (cached?.bizId) return Number(cached.bizId)
-  if (!isLoggedIn()) return 0
-  const me = await fetchMe()
-  return Number(me.bizId) || 0
+  return 0
 }
 
 export interface LoginCheckOptions {

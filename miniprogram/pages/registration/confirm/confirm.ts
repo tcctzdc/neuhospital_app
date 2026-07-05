@@ -1,9 +1,14 @@
-import { fetchMe } from '../../../utils/api/auth'
 import { fetchDoctor, fetchSchedules } from '../../../utils/api/doctor'
 import { createRegistration } from '../../../utils/api/registration'
-import { getUserInfo } from '../../../utils/request'
-import { checkLogin } from '../../../utils/patient'
-import { firstChar, timeSlotText } from '../../../utils/format'
+import { checkLogin, fetchPatientDisplayInfo } from '../../../utils/patient'
+import { BOOKABLE_ADVANCE_DAYS } from '../../../utils/config'
+import {
+  BookableDateOption,
+  buildBookableDateOptions,
+  firstChar,
+  pickBookableDate,
+  timeSlotText,
+} from '../../../utils/format'
 
 interface SlotView {
   value: string
@@ -19,6 +24,8 @@ Page({
     departmentId: 0,
     departmentName: '',
     date: '',
+    advanceDays: BOOKABLE_ADVANCE_DAYS,
+    dateOptions: [] as BookableDateOption[],
     patientId: 0,
     patientName: '',
     selectedSlot: '',
@@ -30,11 +37,14 @@ Page({
   },
 
   onLoad(options: Record<string, string>) {
+    const dateOptions = buildBookableDateOptions(BOOKABLE_ADVANCE_DAYS)
+    const date = pickBookableDate(options.date, BOOKABLE_ADVANCE_DAYS)
     this.setData({
       doctorId: Number(options.doctorId) || 0,
       departmentId: Number(options.departmentId) || 0,
       departmentName: decodeURIComponent(options.departmentName || ''),
-      date: options.date || '',
+      date,
+      dateOptions,
     })
     this.loadPageData()
   },
@@ -50,12 +60,11 @@ Page({
   },
 
   async loadPatient() {
-    const me = await fetchMe()
-    const app = getApp<IAppOption>()
-    app.setUserInfo(me as unknown as Record<string, unknown>)
+    const info = await fetchPatientDisplayInfo()
+    if (!info) return
     this.setData({
-      patientId: me.bizId || 0,
-      patientName: me.realName || me.username,
+      patientId: info.patientId,
+      patientName: info.displayName,
     })
   },
 
@@ -65,7 +74,7 @@ Page({
       fetchDoctor(doctorId),
       fetchSchedules({ doctorId, departmentId, scheduleDate: date }),
     ])
-    const slotOrder = ['AM', 'PM', 'EVENING']
+    const slotOrder = ['MORNING', 'AFTERNOON', 'AM', 'PM', 'EVENING']
     const slotMap = new Map<string, SlotView>()
     schedules.forEach((s) => {
       const slot = s.timeSlot || 'AM'
@@ -94,6 +103,13 @@ Page({
     })
   },
 
+  onSelectDate(e: WechatMiniprogram.TouchEvent) {
+    const date = e.currentTarget.dataset.date as string
+    if (!date || date === this.data.date) return
+    this.setData({ date, pageLoading: true })
+    this.loadDoctorAndSlots().finally(() => this.setData({ pageLoading: false }))
+  },
+
   selectSlot(e: WechatMiniprogram.TouchEvent) {
     if (!e.currentTarget.dataset.available) return
     this.setData({
@@ -103,26 +119,14 @@ Page({
   },
 
   async onSubmit() {
-    const { patientId, selectedScheduleId, date, selectedSlot } = this.data
-    if (!patientId) {
-      const cached = getUserInfo()
-      if (!cached?.bizId) {
-        wx.showToast({ title: '无法获取患者信息', icon: 'none' })
-        return
-      }
-    }
+    const { selectedScheduleId } = this.data
     if (!selectedScheduleId) {
       wx.showToast({ title: '请选择可用时段', icon: 'none' })
       return
     }
     this.setData({ loading: true })
     try {
-      await createRegistration({
-        patientId: patientId || Number(getUserInfo()?.bizId),
-        scheduleId: selectedScheduleId,
-        visitDate: date,
-        timeSlot: selectedSlot,
-      })
+      await createRegistration({ scheduleId: selectedScheduleId })
       wx.showToast({ title: '挂号成功', icon: 'success' })
       setTimeout(() => wx.redirectTo({ url: '/pages/registration/my-list/my-list' }), 1000)
     } catch {

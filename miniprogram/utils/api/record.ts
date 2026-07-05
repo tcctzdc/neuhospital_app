@@ -27,31 +27,26 @@ export interface PrescriptionDto {
   items?: unknown[]
 }
 
-export interface CheckResultDto {
+export interface CheckRequestDto {
   id: number
+  requestNo?: string
   checkName?: string
+  checkItemName?: string
   name?: string
   departmentName?: string
   createdAt?: string
   status?: string
 }
 
-export interface InspectionResultDto {
+export interface InspectionRequestDto {
   id: number
+  requestNo?: string
   inspectionName?: string
+  inspectionItemName?: string
   name?: string
   departmentName?: string
   createdAt?: string
   status?: string
-}
-
-export interface CtAnalysisTaskDto {
-  id: number
-  taskId?: number
-  analysisType?: string
-  status?: string
-  riskLevel?: string
-  createdAt?: string
 }
 
 export interface MedicalDiagnosisDto {
@@ -61,10 +56,12 @@ export interface MedicalDiagnosisDto {
   code?: string
 }
 
+/** 病历列表 GET /api/outpatient/records?patientId=&pageNo=&pageSize= */
 export async function fetchPatientRecords(patientId: number): Promise<MedicalRecordDto[]> {
   const data = await request<MedicalRecordDto[] | { records: MedicalRecordDto[] }>({
-    url: `/patients/${patientId}/records`,
+    url: '/outpatient/records',
     method: 'GET',
+    data: { patientId, pageNo: 1, pageSize: 50 },
   })
   return unwrapList(data)
 }
@@ -81,38 +78,31 @@ export async function fetchMedicalDiagnoses(recordId: number): Promise<MedicalDi
   return unwrapList(data)
 }
 
-export async function fetchPrescriptions(patientId?: number): Promise<PrescriptionDto[]> {
+export async function fetchPrescriptions(patientId: number): Promise<PrescriptionDto[]> {
   const data = await request<PrescriptionDto[] | { records: PrescriptionDto[] }>({
     url: '/prescriptions',
     method: 'GET',
-    data: patientId ? { patientId } : undefined,
+    data: { patientId, pageNo: 1, pageSize: 50 },
   })
   return unwrapList(data)
 }
 
-export async function fetchCheckResults(patientId?: number): Promise<CheckResultDto[]> {
-  const data = await request<CheckResultDto[] | { records: CheckResultDto[] }>({
-    url: '/check-results',
+/** 检查申请单列表 GET /api/check-requests?patientId= */
+export async function fetchCheckRequests(patientId: number): Promise<CheckRequestDto[]> {
+  const data = await request<CheckRequestDto[] | { records: CheckRequestDto[] }>({
+    url: '/check-requests',
     method: 'GET',
-    data: patientId ? { patientId, pageNo: 1, pageSize: 50 } : { pageNo: 1, pageSize: 50 },
+    data: { patientId, pageNo: 1, pageSize: 50 },
   })
   return unwrapList(data)
 }
 
-export async function fetchInspectionResults(patientId?: number): Promise<InspectionResultDto[]> {
-  const data = await request<InspectionResultDto[] | { records: InspectionResultDto[] }>({
-    url: '/inspection-results',
+/** 检验申请单列表 GET /api/inspection-requests?patientId= */
+export async function fetchInspectionRequests(patientId: number): Promise<InspectionRequestDto[]> {
+  const data = await request<InspectionRequestDto[] | { records: InspectionRequestDto[] }>({
+    url: '/inspection-requests',
     method: 'GET',
-    data: patientId ? { patientId, pageNo: 1, pageSize: 50 } : { pageNo: 1, pageSize: 50 },
-  })
-  return unwrapList(data)
-}
-
-export async function fetchCtAnalysisTasks(patientId?: number): Promise<CtAnalysisTaskDto[]> {
-  const data = await request<CtAnalysisTaskDto[] | { records: CtAnalysisTaskDto[] }>({
-    url: '/ct-analysis/tasks',
-    method: 'GET',
-    data: patientId ? { patientId, pageNo: 1, pageSize: 50 } : { pageNo: 1, pageSize: 50 },
+    data: { patientId, pageNo: 1, pageSize: 50 },
   })
   return unwrapList(data)
 }
@@ -124,3 +114,9 @@ export async function fetchPatientProfile(patientId: number): Promise<Record<str
 export async function updatePatientProfile(patientId: number, payload: Record<string, unknown>): Promise<void> {
   await request({ url: `/patients/${patientId}`, method: 'PUT', data: payload })
 }
+
+/** @deprecated 使用 fetchCheckRequests */
+export const fetchCheckResults = fetchCheckRequests
+
+/** @deprecated 使用 fetchInspectionRequests */
+export const fetchInspectionResults = fetchInspectionRequests

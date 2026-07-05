@@ -20,7 +20,7 @@ export async function loadDoctorCards(options: {
 }): Promise<DoctorCardView[]> {
   const { departmentId, scheduleDate, departmentName } = options
   const [doctorList, scheduleList] = await Promise.all([
-    fetchDoctors(departmentId),
+    fetchDoctors(departmentId ? { departmentId } : undefined),
     fetchSchedules({ departmentId, scheduleDate }),
   ])
   const scheduleByDoctor = new Map<number, typeof scheduleList>()

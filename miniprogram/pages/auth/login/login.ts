@@ -1,4 +1,4 @@
-import { login } from '../../../utils/api/auth'
+import { login, fetchMe } from '../../../utils/api/auth'
 import { STORAGE_KEYS } from '../../../utils/config'
 
 Page({
@@ -28,7 +28,12 @@ Page({
       wx.setStorageSync(STORAGE_KEYS.ACCESS_TOKEN, data.accessToken)
       wx.setStorageSync(STORAGE_KEYS.REFRESH_TOKEN, data.refreshToken)
       const app = getApp<IAppOption>()
-      app.setUserInfo(data as unknown as Record<string, unknown>)
+      try {
+        const me = await fetchMe()
+        app.setUserInfo(me as unknown as Record<string, unknown>)
+      } catch {
+        app.setUserInfo(data as unknown as Record<string, unknown>)
+      }
       wx.showToast({ title: '登录成功', icon: 'success' })
       setTimeout(() => wx.navigateBack(), 1000)
     } catch {

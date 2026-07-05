@@ -1,4 +1,12 @@
-<view class="page profile-page">
+<view class="page profile-page page-shell">
+  <view wx:if="{{loading && isLoggedIn}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading && isLoggedIn}}">
   <!-- 用户头部 -->
   <view class="profile-header">
     <view class="profile-header__bg"></view>
@@ -37,7 +45,7 @@
     <view class="card profile-section">
       <view class="profile-section__title">健康档案</view>
       <view class="profile-menu">
-        <view class="profile-menu__item" wx:for="{{healthMenus}}" wx:key="label" bindtap="goPage" data-url="{{item.url}}">
+        <view class="profile-menu__item" wx:for="{{healthMenus}}" wx:key="label" bindtap="goPage" data-url="{{item.url}}" data-login="{{item.needLogin}}">
           <text class="profile-menu__icon">{{item.icon}}</text>
           <text class="profile-menu__label">{{item.label}}</text>
           <text class="profile-menu__arrow">›</text>
@@ -58,5 +66,6 @@
     </view>
 
     <button wx:if="{{isLoggedIn}}" class="btn-outline profile-logout" bindtap="logout">退出登录</button>
+  </view>
   </view>
 </view>

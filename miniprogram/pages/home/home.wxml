@@ -1,18 +1,54 @@
 <view class="home">
-  <!-- 顶部渐变区：仅标题 -->
   <view class="home-header">
     <text class="home-header__title">智慧云脑诊疗</text>
-    <text class="home-header__subtitle">AI 赋能 · 智慧就医</text>
+    <text class="home-header__subtitle">患者端 · 智慧就医</text>
   </view>
 
   <view class="home-body">
-    <!-- 搜索框：独立于轮播，避免重叠 -->
-    <view class="home-search" bindtap="goSearch">
-      <text class="home-search__icon">🔍</text>
-      <text class="home-search__text">搜索科室、医生</text>
+    <!-- 搜索：科室名 / 医生名 -->
+    <view class="home-search-wrap">
+      <view class="home-search">
+        <text class="home-search__icon">🔍</text>
+        <input
+          class="home-search__input"
+          placeholder="搜索科室、医生姓名"
+          value="{{searchKeyword}}"
+          confirm-type="search"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+          bindfocus="onSearchFocus"
+        />
+        <text wx:if="{{searchKeyword}}" class="home-search__clear" bindtap="clearSearch">✕</text>
+      </view>
+      <view wx:if="{{searchKeyword}}" class="home-search-panel card">
+        <view wx:if="{{searchLoading}}" class="home-search-panel__loading">
+          <view class="page-loading__ring"></view>
+          <text>搜索中...</text>
+        </view>
+        <block wx:elif="{{searchResults.length}}">
+          <view
+            class="home-search-item"
+            wx:for="{{searchResults}}"
+            wx:key="type-{{item.type}}-{{item.id}}"
+            bindtap="onSearchResult"
+            data-type="{{item.type}}"
+            data-id="{{item.id}}"
+            data-name="{{item.name}}"
+            data-department-id="{{item.departmentId}}"
+            data-department-name="{{item.departmentName}}"
+          >
+            <text class="home-search-item__tag">{{item.type === 'dept' ? '科室' : '医生'}}</text>
+            <view class="home-search-item__info">
+              <text class="home-search-item__name">{{item.name}}</text>
+              <text class="home-search-item__sub">{{item.sub}}</text>
+            </view>
+            <text class="home-search-item__arrow">›</text>
+          </view>
+        </block>
+        <view wx:else class="home-search-panel__empty">未找到「{{searchKeyword}}」相关结果</view>
+      </view>
     </view>
 
-    <!-- 轮播公告 -->
     <swiper class="home-banner" autoplay circular indicator-dots indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#fff">
       <swiper-item wx:for="{{banners}}" wx:key="id">
         <view class="home-banner__item home-banner__item--{{index}}">
@@ -23,7 +59,6 @@
       </swiper-item>
     </swiper>
 
-    <!-- 快捷服务：4 列 x 2 行 -->
     <view class="card home-services">
       <view class="home-services__title">
         <text class="home-services__title-text">快捷服务</text>
@@ -35,6 +70,7 @@
           wx:key="label"
           bindtap="goService"
           data-url="{{item.url}}"
+          data-login="{{item.needLogin}}"
         >
           <view class="home-service-item__icon" style="background: {{item.bgColor}}">
             <text class="home-service-item__emoji">{{item.icon}}</text>
@@ -45,25 +81,20 @@
       </view>
     </view>
 
-    <!-- AI 导诊入口 -->
-    <view class="home-ai card" bindtap="goTriage">
-      <view class="home-ai__left">
-        <view class="home-ai__badge">AI</view>
-        <view>
-          <text class="home-ai__title">智能导诊</text>
-          <text class="home-ai__desc">描述症状，AI 推荐合适科室</text>
-        </view>
-      </view>
-      <text class="home-ai__arrow">›</text>
-    </view>
-
-    <!-- 热门科室 -->
+    <!-- 推荐科室：门诊可挂号，取前 6 个 -->
     <view class="home-section">
       <view class="section-title">
-        <text class="section-title__text">热门科室</text>
+        <view>
+          <text class="section-title__text">推荐科室</text>
+          <text class="home-section__hint">门诊可挂号 · 展示前 6 个</text>
+        </view>
         <text class="section-title__more" bindtap="goDepartments">全部 ›</text>
       </view>
-      <scroll-view class="home-depts" scroll-x enable-flex>
+      <view wx:if="{{deptLoading}}" class="page-loading">
+        <view class="page-loading__ring"></view>
+        <text class="page-loading__text">加载中...</text>
+      </view>
+      <scroll-view wx:elif="{{departments.length}}" class="home-depts" scroll-x enable-flex>
         <view
           class="home-dept"
           wx:for="{{departments}}"
@@ -71,13 +102,17 @@
           bindtap="goDepartment"
           data-id="{{item.id}}"
         >
-          <view class="home-dept__icon" style="background: {{item.bgColor}}">{{item.icon}}</view>
+          <view class="home-dept__icon" style="background: {{item.bgColor}}">
+            <text class="home-dept__abbr">{{item.abbr}}</text>
+          </view>
           <text class="home-dept__name">{{item.name}}</text>
         </view>
       </scroll-view>
+      <view wx:else class="home-depts-empty">
+        <text class="home-depts-empty__text">{{isLoggedIn ? '暂无门诊科室' : '登录后查看推荐科室'}}</text>
+      </view>
     </view>
 
-    <!-- 待办提醒 -->
     <view class="home-section" wx:if="{{todos.length}}">
       <view class="section-title">
         <text class="section-title__text">待办提醒</text>

@@ -22,5 +22,5 @@
     </view>
   </view>
 
-  <button class="btn-primary safe-bottom" style="width:100%;margin-top:48rpx" bindtap="onPay">微信支付</button>
+  <button class="btn-primary safe-bottom" style="width:100%;margin-top:48rpx" loading="{{paying}}" bindtap="onPay">微信支付</button>
 </view>

@@ -1,73 +1,42 @@
 import { request } from '../request'
-import { unwrapList } from '../format'
 
 export interface AiSessionDto {
-  id: number
-  title?: string
+  id?: number
+  sessionNo?: string
   sessionType?: string
   status?: string
-  createdAt?: string
-  updatedAt?: string
-  lastMessage?: string
+  registrationId?: number
 }
 
 export interface AiMessageDto {
-  id: number
+  id?: number
   role: string
   content: string
   createdAt?: string
 }
 
-export interface AiTriageResultDto {
-  sessionId?: string | number
-  departmentId?: number
-  departmentName?: string
-  reason?: string
-  confidence?: number
-  advice?: string
-  recommendedDepartment?: string
-}
-
-export async function fetchAiSessions(): Promise<AiSessionDto[]> {
-  const data = await request<AiSessionDto[] | { records: AiSessionDto[] }>({
-    url: '/ai/chat/sessions',
-    method: 'GET',
-  })
-  return unwrapList(data)
-}
-
-export async function createAiSession(patientId: number, sessionType = 'INQUIRY'): Promise<AiSessionDto> {
+/** 创建 AI 会话：传 sessionType，patientId 由 Token 解析 */
+export async function createAiSession(
+  sessionType: 'INQUIRY' | 'TRIAGE' = 'INQUIRY',
+  registrationId?: number,
+): Promise<AiSessionDto> {
+  const data: Record<string, unknown> = { sessionType }
+  if (registrationId) data.registrationId = registrationId
   return request<AiSessionDto>({
     url: '/ai/chat/sessions',
     method: 'POST',
-    data: { patientId, sessionType },
+    data,
   })
 }
 
-export async function fetchAiMessages(sessionId: number): Promise<AiMessageDto[]> {
-  const data = await request<AiMessageDto[] | { records: AiMessageDto[] }>({
-    url: `/ai/chat/sessions/${sessionId}/messages`,
-    method: 'GET',
-  })
-  return unwrapList(data)
-}
-
-export async function sendAiMessage(sessionId: number, content: string): Promise<AiMessageDto | { reply?: string; assistantMessage?: AiMessageDto; userMessage?: AiMessageDto }> {
+/** 发送消息 POST /api/ai/chat/sessions/{sessionNo}/messages */
+export async function sendAiMessage(
+  sessionNo: string,
+  content: string,
+): Promise<{ content?: string; reply?: string; assistantMessage?: AiMessageDto }> {
   return request({
-    url: `/ai/chat/sessions/${sessionId}/messages`,
+    url: `/ai/chat/sessions/${sessionNo}/messages`,
     method: 'POST',
     data: { content, role: 'USER' },
   })
-}
-
-export async function submitAiTriage(symptoms: string, patientId?: number): Promise<AiTriageResultDto> {
-  return request<AiTriageResultDto>({
-    url: '/ai/triage',
-    method: 'POST',
-    data: { symptoms, patientId },
-  })
-}
-
-export async function fetchAiTriageResult(sessionId: string | number): Promise<AiTriageResultDto> {
-  return request<AiTriageResultDto>({ url: `/ai/triage/${sessionId}`, method: 'GET' })
 }

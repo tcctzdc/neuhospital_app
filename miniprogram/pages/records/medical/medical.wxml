@@ -1,4 +1,12 @@
-<view class="page page-padding">
+<view class="page page-padding page-shell">
+  <view wx:if="{{loading}}" class="page-overlay">
+    <view class="page-loading">
+      <view class="page-loading__ring"></view>
+      <text class="page-loading__text">加载中...</text>
+    </view>
+  </view>
+
+  <view hidden="{{loading}}">
   <view class="card medical-header">
     <text class="medical-header__title">门诊病历</text>
     <text class="medical-header__meta">{{meta}}</text>
@@ -15,5 +23,6 @@
       <text class="medical-diagnosis__name">{{item.name}}</text>
       <text class="medical-diagnosis__code">{{item.code}}</text>
     </view>
+  </view>
   </view>
 </view>

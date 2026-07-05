@@ -1,5 +1,5 @@
-import { createAiSession, fetchAiMessages, sendAiMessage } from '../../../utils/api/ai'
-import { getPatientId, checkLogin } from '../../../utils/patient'
+import { createAiSession, sendAiMessage } from '../../../utils/api/ai'
+import { checkLogin } from '../../../utils/patient'
 
 interface MsgView {
   id: number
@@ -18,56 +18,33 @@ function formatTime(raw?: string): string {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-function mapMessage(m: Record<string, unknown>, idx: number): MsgView {
-  return {
-    id: Number(m.id ?? idx),
-    role: String(m.role || '').toLowerCase() === 'user' ? 'user' : 'assistant',
-    content: String(m.content || ''),
-    time: formatTime(String(m.createdAt || '')),
-  }
-}
-
 Page({
   data: {
-    sessionId: null as number | null,
+    sessionNo: '',
     input: '',
     typing: false,
+    sending: false,
     scrollTo: '',
     messages: [] as MsgView[],
     quickQuestions: [
       '头痛三天伴有恶心怎么办？',
       '高血压患者饮食注意事项',
       '感冒和流感有什么区别？',
-      '应该挂哪个科室？',
+      '帮我查一下明天有没有心内科号源',
     ],
     msgId: 0,
   },
 
-  async onLoad(options: Record<string, string>) {
+  async onLoad() {
     if (!checkLogin({ navigate: true })) return
-    if (options.sessionId) {
-      const sessionId = Number(options.sessionId)
-      this.setData({ sessionId })
-      await this.loadMessages(sessionId)
-    }
   },
 
-  async ensureSession(): Promise<number> {
-    if (this.data.sessionId) return this.data.sessionId
-    const patientId = await getPatientId()
-    const session = await createAiSession(patientId, 'INQUIRY')
-    this.setData({ sessionId: session.id })
-    return session.id
-  },
-
-  async loadMessages(sessionId: number) {
-    try {
-      const list = await fetchAiMessages(sessionId)
-      const messages = list.map((m, i) => mapMessage(m as unknown as Record<string, unknown>, i + 1))
-      this.setData({ messages, msgId: messages.length })
-    } catch {
-      this.setData({ messages: [], msgId: 0 })
-    }
+  async ensureSession(): Promise<string> {
+    if (this.data.sessionNo) return this.data.sessionNo
+    const session = await createAiSession('INQUIRY')
+    const sessionNo = String(session.sessionNo || session.id || '')
+    this.setData({ sessionNo })
+    return sessionNo
   },
 
   onInput(e: WechatMiniprogram.Input) {
@@ -90,37 +67,30 @@ Page({
       messages: [...messages, userMsg],
       input: '',
       typing: true,
+      sending: true,
       msgId: msgId + 1,
       scrollTo: `msg-${msgId + 1}`,
     })
 
     try {
-      const sessionId = await this.ensureSession()
-      const res = await sendAiMessage(sessionId, text)
-      let reply = ''
-      if (typeof res === 'object' && res) {
-        const r = res as Record<string, unknown>
-        reply = String(
-          r.content
-          || (r.assistantMessage as Record<string, unknown>)?.content
-          || r.reply
-          || '',
-        )
-      }
-      if (!reply) {
-        await this.loadMessages(sessionId)
-        this.setData({ typing: false })
-        return
-      }
+      const sessionNo = await this.ensureSession()
+      const res = await sendAiMessage(sessionNo, text)
+      const reply = String(
+        res.content
+        || res.reply
+        || res.assistantMessage?.content
+        || '抱歉，暂时无法回答，请稍后再试。',
+      )
       const aiMsg: MsgView = { id: msgId + 2, role: 'assistant', content: reply, time }
       this.setData({
         messages: [...this.data.messages, aiMsg],
         typing: false,
+        sending: false,
         msgId: msgId + 2,
         scrollTo: `msg-${msgId + 2}`,
       })
     } catch {
-      this.setData({ typing: false })
+      this.setData({ typing: false, sending: false })
     }
   },
 })
